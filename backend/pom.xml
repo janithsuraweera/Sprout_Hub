@@ -99,6 +99,14 @@
     		<groupId>org.springframework.boot</groupId>
    			 <artifactId>spring-boot-starter-data-mongodb</artifactId>
 </dependency>
+
+<dependency>
+    <groupId>jakarta.servlet</groupId>
+    <artifactId>jakarta.servlet-api</artifactId>
+    <version>5.0.0</version> <!-- Use the version matching your Spring Boot version -->
+    <scope>provided</scope>
+</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
