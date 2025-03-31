@@ -1,13 +1,15 @@
 package com.sprouthub.sprouthub.service;
 
-import com.sprouthub.sprouthub.dto.UserDTO;
+import com.sprouthub.sprouthub.model.Role;
 import com.sprouthub.sprouthub.model.User;
+import com.sprouthub.sprouthub.repository.RoleRepository;
 import com.sprouthub.sprouthub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -15,59 +17,28 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    @Autowired
+    private RoleRepository roleRepository;
 
-    public Optional<User> getUserById(String id) {
-        return userRepository.findById(id);
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    public User createUser(UserDTO userDTO) {
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword()); // In real app, hash password
-        user.setRoles(userDTO.getRoles());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setProfilePicture(userDTO.getProfilePicture());
-        user.setBio(userDTO.getBio());
-        user.setLocation(userDTO.getLocation());
-        return userRepository.save(user);
-    }
-
-    public User updateUser(String id, UserDTO userDTO) {
-        Optional<User> existingUser = userRepository.findById(id);
-        if (existingUser.isPresent()) {
-            User user = existingUser.get();
-            user.setUsername(userDTO.getUsername());
-            user.setEmail(userDTO.getEmail());
-            user.setPassword(userDTO.getPassword()); // In real app, hash password
-            user.setRoles(userDTO.getRoles());
-            user.setFirstName(userDTO.getFirstName());
-            user.setLastName(userDTO.getLastName());
-            user.setProfilePicture(userDTO.getProfilePicture());
-            user.setBio(userDTO.getBio());
-            user.setLocation(userDTO.getLocation());
-            return userRepository.save(user);
+    public User registerUser(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new RuntimeException("Username is already taken!");
         }
-        return null; // Or throw exception
-    }
 
-    public void deleteUser(String id) {
-        userRepository.deleteById(id);
-    }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email is already registered!");
+        }
 
-    public Optional<User> findByUsername(String username){
-        return userRepository.findByUsername(username);
-    }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-    public Boolean existsByUsername(String username){
-        return userRepository.existsByUsername(username);
-    }
+        Role userRole = roleRepository.findByName("ROLE_USER");
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRole);
+        user.setRoles(roles);
 
-    public Boolean existsByEmail(String email){
-        return userRepository.existsByEmail(email);
+        return userRepository.save(user);
     }
 }

@@ -2,24 +2,19 @@ package com.sprouthub.sprouthub.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.util.Set;
 
-@Document(collection = "users")
 @Data
+@Document(collection = "users")
 public class User {
-
     @Id
     private String id;
     private String username;
     private String email;
     private String password;
-    private List<String> roles;
-    private String firstName;
-    private String lastName;
-    private String profilePicture;
-    private String bio;
-    private String location;
-    // Add other relevant fields
+    @DBRef
+    private Set<Role> roles;
 }

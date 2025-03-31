@@ -16,5 +16,7 @@ public class PlantPost {
     private String content;
     private Date date;
     private String authorId;
-  
+    private String imageUrl;
+    private String category;
+    // Add other relevant fields
 }
