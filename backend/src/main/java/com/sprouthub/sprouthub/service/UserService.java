@@ -1,54 +1,48 @@
 package com.sprouthub.sprouthub.service;
 
-import com.sprouthub.sprouthub.model.Role;
 import com.sprouthub.sprouthub.model.User;
-import com.sprouthub.sprouthub.repository.RoleRepository;
 import com.sprouthub.sprouthub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    RoleRepository roleRepository;
+    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    public User registerUser(String username, String email, String password) {
-        if (userRepository.existsByUsername(username)) {
-            throw new RuntimeException("Username is already taken.");
-        }
-        if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException("Email is already in use.");
+    public User registerUser(String username, String password, String email) {
+  
+        Optional<User> existingUser = userRepository.findByUsername(username);
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("Username already exists"); 
         }
 
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setEmail(email);
+        return userRepository.save(newUser);
+    }
 
-        Role userRole = roleRepository.findByName("USER")
-                .orElseGet(() -> {
-                    Role newUserRole = new Role();
-                    newUserRole.setName("USER");
-                    return roleRepository.save(newUserRole);
-                });
+    public Optional<User> loginUser(String username, String password) {
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isPresent()) {
 
-        user.setRoles(Collections.singletonList(userRole.getName()));
-        return userRepository.save(user);
+            if (passwordEncoder.matches(password, user.get().getPassword())) {
+                return user;
+            }
+        }
+        return Optional.empty();
     }
 
     public User getUser(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found."));
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUser'");
     }
-
-    // Add other user service methods (update, delete, etc.) here
 }
