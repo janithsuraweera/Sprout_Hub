@@ -1,7 +1,7 @@
 package com.sprouthub.sprouthub.config;
 
 import com.sprouthub.sprouthub.security.JwtRequestFilter;
-import com.sprouthub.sprouthub.service.UserService;
+import com.sprouthub.sprouthub.service.UserServiceImpl; // UserService වෙනුවට UserServiceImpl භාවිතා කරන්න.
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +24,7 @@ public class SecurityConfig {
     private JwtRequestFilter jwtRequestFilter;
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(UserService userService) {
+    public DaoAuthenticationProvider authenticationProvider(UserServiceImpl userService) { // UserService වෙනුවට UserServiceImpl භාවිතා කරන්න.
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -42,7 +42,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, UserService userService) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, UserServiceImpl userService) throws Exception { // UserService වෙනුවට UserServiceImpl භාවිතා කරන්න.
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
