@@ -43,19 +43,24 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         try {
+            System.out.println("Attempting login for user: " + user.getUsername()); // ලොග් එකතු කරන්න
+    
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             );
-
+    
+            System.out.println("User authenticated successfully: " + authentication.getName()); // ලොග් එකතු කරන්න
+    
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String token = jwtUtil.generateToken(userDetails);
-
+    
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("role", userDetails.getAuthorities().iterator().next().getAuthority());
-
+    
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            System.err.println("Login failed: " + e.getMessage()); // දෝෂය ලොග් කරන්න
             return ResponseEntity.badRequest().body("Invalid username or password.......");
         }
     }

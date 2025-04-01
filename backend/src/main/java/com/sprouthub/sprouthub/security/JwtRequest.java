@@ -9,7 +9,6 @@ public class JwtRequest implements Serializable {
     private String username;
     private String password;
 
-    // අවශ්‍ය constructor, getters සහ setters මෙහි ඇත.
     public JwtRequest() {}
 
     public JwtRequest(String username, String password) {
