@@ -1,5 +1,5 @@
 package com.sprouthub.sprouthub.service;
 
-public class TutorialService {
+public class ForumPostService {
     
 }

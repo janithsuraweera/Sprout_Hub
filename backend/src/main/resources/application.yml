@@ -1,4 +1,0 @@
-# spring:
-#   data:
-#     mongodb:
-#       uri: mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/SproutHub?retryWrites=true&w=majority

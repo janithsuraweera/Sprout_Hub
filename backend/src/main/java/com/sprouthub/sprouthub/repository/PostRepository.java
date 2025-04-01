@@ -1,5 +1,5 @@
 package com.sprouthub.sprouthub.repository;
 
-public class ProductRepository {
+public class PostRepository {
     
 }

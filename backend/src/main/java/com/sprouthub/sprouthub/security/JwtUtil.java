@@ -1,5 +1,5 @@
 package com.sprouthub.sprouthub.security;
 
-public class JwtRequestFilter {
+public class JwtUtil {
     
 }
