@@ -6,12 +6,14 @@ const RegisterForm = ({ onRegisterSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [userRole, setUserRole] = useState(null); //new state for user role
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await authService.register(username, password);
       onRegisterSuccess(response); //main component request to pass the user data.
+      setUserRole(response.role); //new state for user role  (role eka defalt dala tiyennema user kenek widiyata)
     } catch (err) {
       setError(err.message || 'Registration failed');
     }
