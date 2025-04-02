@@ -1,33 +1,39 @@
-// // import axios from 'axios';
+import axios from 'axios';
 
-// const API_URL = '/api/auth';
+const API_URL = 'http://localhost:8082/api/auth/';
 
-// export const register = async (username, password, role) => {
-//     const response = await axios.post(`${API_URL}/register`, {
-//         username,
-//         password,
-//         role,
-//     });
-//     return response.data;
-// };
+const login = async (username, password) => {
+  const response = await axios.post(API_URL + 'login', {
+    username,
+    password,
+  });
+  if (response.data.token) {
+    localStorage.setItem('user', JSON.stringify(response.data));
+  }
+  return response.data;
+};
 
-// export const login = async (username, password) => {
-//     const response = await axios.post(`${API_URL}/login`, {
-//         username,
-//         password,
-//     });
-//     if (response.data.token) {
-//         localStorage.setItem('token', response.data.token);
-//         localStorage.setItem('role', response.data.role);
-//     }
-//     return response.data;
-// };
+const register = async (username, password) => {
+  const response = await axios.post(API_URL + 'register', {
+    username,
+    password,
+  });
+  return response.data;
+};
 
-// export const logout = () => {
-//     localStorage.removeItem('token');
-//     localStorage.removeItem('role');
-// };
+const logout = () => {
+  localStorage.removeItem('user');
+};
 
-// export const getCurrentUser = () => {
-//     return localStorage.getItem('token');
-// };
+const getCurrentUser = () => {
+  return JSON.parse(localStorage.getItem('user'));
+};
+
+const authService = {
+  login,
+  register,
+  logout,
+  getCurrentUser,
+};
+
+export default authService;

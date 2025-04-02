@@ -1,20 +1,54 @@
-// import React from 'react';
-// import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-// import Login from './components/auth/LoginForm';
-// import Register from './components/auth/RegisterForm';
+import React, { useState } from 'react';
+import LoginForm from './components/auth/LoginForm';
+import RegisterForm from './components/auth/RegisterForm';
+import authService from './services/authService';
 
-// import './App.css';
+function App() {
+  const [user, setUser] = useState(authService.getCurrentUser());
+  const [showLogin, setShowLogin] = useState(true); // login form first open
 
-// function App() {
-//     return (
-//         <Router>
-//             <Routes>
-//                 <Route path="/register" element={<Register />} />
-//                 <Route path="/login" element={<Login />} />
-//                 <Route path="/" element={<Navigate replace to="/login" />} />
-//             </Routes>
-//         </Router>
-//     );
-// }
+  const handleLoginSuccess = (userData) => { // login success
+    setUser(userData);
+    setShowLogin(false); 
+    
+  };
 
-// export default App;
+  const handleRegisterSuccess = (userData) => { // register success
+    setUser(userData);
+    setShowLogin(false); 
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    setUser(null);
+    setShowLogin(true); // logout and enter loging form
+  };
+
+  return (
+    <div>
+      {user ? (
+        <div>
+          <p>Welcome, {user.role}!</p>
+          <button onClick={handleLogout}>Logout</button>
+
+
+
+          {/*other option in my parts */}
+        </div>
+      ) : (
+        <div>
+          {showLogin ? (
+            <LoginForm onLoginSuccess={handleLoginSuccess} />
+          ) : (
+            <RegisterForm onRegisterSuccess={handleRegisterSuccess} />
+          )}
+          <button onClick={() => setShowLogin(!showLogin)}>
+            {showLogin ? 'Go to Register' : 'Go to Login'}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
