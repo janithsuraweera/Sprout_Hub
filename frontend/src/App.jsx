@@ -30,7 +30,13 @@ function App() {
       <Navbar />
       <div className="container">
         <Routes>
-          <Route path="/" element={<PostsList />} />
+
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
+
+
           <Route path="/posts" element={<PostsList />} />
           <Route path="/posts/create" element={<CreatePost />} />
           <Route path="/posts/edit/:id" element={<EditPost />} />
@@ -51,9 +57,7 @@ function App() {
           <Route path="/marketplace/edit/:id" element={<EditProduct />} />
           <Route path="/marketplace/:id" element={<ProductDetails />} />
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
+
 
           <Route path="/admin/users" element={<UserManagement />} />
         </Routes>

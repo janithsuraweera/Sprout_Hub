@@ -5,7 +5,7 @@ function Navbar() {
   return (
     <nav>
       <ul>
-        <li><Link to="/">Posts</Link></li>
+        <li><Link to="/">Home</Link></li>
         <li><Link to="/tutorials">Tutorials</Link></li>
         <li><Link to="/forum">Forum</Link></li>
         <li><Link to="/marketplace">Marketplace</Link></li>
