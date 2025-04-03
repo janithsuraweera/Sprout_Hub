@@ -24,7 +24,12 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException("Username already exists");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole("ROLE_USER"); // පෙරනිමි භූමිකාව සකසන්න
+
+
+
+        // user.setRole("ROLE_USER"); // පෙරනිමි භූමිකාව සකසන්න
+
+        
         return userRepository.save(user);
     }
 
