@@ -1,65 +1,93 @@
+// import React from 'react';
+// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+// import Navbar from './components/Layout/Navbar';
+// import Footer from './components/Layout/Footer';
+// import PostsList from './components/Posts/PostsList';
+// import CreatePost from './components/Posts/CreatePost';
+// import EditPost from './components/Posts/EditPost';
+// import PostDetails from './components/Posts/PostDetails';
+// import TutorialsList from './components/Tutorials/TutorialsList';
+// import CreateTutorial from './components/Tutorials/CreateTutorial';
+// import EditTutorial from './components/Tutorials/EditTutorial';
+// import TutorialDetails from './components/Tutorials/TutorialDetails';
+// import ForumList from './components/Forum/ForumList';
+// import CreateForumPost from './components/Forum/CreateForumPost';
+// import EditForumPost from './components/Forum/EditForumPost';
+// import ForumPostDetails from './components/Forum/ForumPostDetails';
+// import MarketplaceList from './components/Marketplace/MarketplaceList';
+// import CreateProduct from './components/Marketplace/CreateProduct';
+// import EditProduct from './components/Marketplace/EditProduct';
+// import ProductDetails from './components/Marketplace/ProductDetails';
+// import Login from './components/auth/LoginForm';
+// import Register from './components/auth/RegisterForm';
+// import Profile from './components/auth/Profile';
+// import UserManagement from './components/Admin/UserManagement';
+// import './App.css';
+
+// function App() {
+//   return (
+//     <Router>
+//       <Navbar />
+//       <div className="container">
+//         <Routes>
+
+//         <Route path="/" element={<Login />} />
+//         <Route path="/login" element={<Login />} />
+//           <Route path="/register" element={<Register />} />
+//           <Route path="/profile" element={<Profile />} />
+
+
+//           <Route path="/posts" element={<PostsList />} />
+//           <Route path="/posts/create" element={<CreatePost />} />
+//           <Route path="/posts/edit/:id" element={<EditPost />} />
+//           <Route path="/posts/:id" element={<PostDetails />} />
+
+//           <Route path="/tutorials" element={<TutorialsList />} />
+//           <Route path="/tutorials/create" element={<CreateTutorial />} />
+//           <Route path="/tutorials/edit/:id" element={<EditTutorial />} />
+//           <Route path="/tutorials/:id" element={<TutorialDetails />} />
+
+//           <Route path="/forum" element={<ForumList />} />
+//           <Route path="/forum/create" element={<CreateForumPost />} />
+//           <Route path="/forum/edit/:id" element={<EditForumPost />} />
+//           <Route path="/forum/:id" element={<ForumPostDetails />} />
+
+//           <Route path="/marketplace" element={<MarketplaceList />} />
+//           <Route path="/marketplace/create" element={<CreateProduct />} />
+//           <Route path="/marketplace/edit/:id" element={<EditProduct />} />
+//           <Route path="/marketplace/:id" element={<ProductDetails />} />
+
+
+
+//           <Route path="/admin/users" element={<UserManagement />} />
+//         </Routes>
+//       </div>
+//       <Footer />
+//     </Router>
+//   );
+// }
+
+// export default App;
+
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
-import PostsList from './components/Posts/PostsList';
-import CreatePost from './components/Posts/CreatePost';
-import EditPost from './components/Posts/EditPost';
-import PostDetails from './components/Posts/PostDetails';
-import TutorialsList from './components/Tutorials/TutorialsList';
-import CreateTutorial from './components/Tutorials/CreateTutorial';
-import EditTutorial from './components/Tutorials/EditTutorial';
-import TutorialDetails from './components/Tutorials/TutorialDetails';
-import ForumList from './components/Forum/ForumList';
-import CreateForumPost from './components/Forum/CreateForumPost';
-import EditForumPost from './components/Forum/EditForumPost';
-import ForumPostDetails from './components/Forum/ForumPostDetails';
-import MarketplaceList from './components/Marketplace/MarketplaceList';
-import CreateProduct from './components/Marketplace/CreateProduct';
-import EditProduct from './components/Marketplace/EditProduct';
-import ProductDetails from './components/Marketplace/ProductDetails';
-import Login from './components/auth/LoginForm';
-import Register from './components/auth/RegisterForm';
+import LoginForm from './components/auth/LoginForm';
+import RegisterForm from './components/auth/RegisterForm';
 import Profile from './components/auth/Profile';
-import UserManagement from './components/Admin/UserManagement';
-import './App.css';
 
 function App() {
   return (
     <Router>
       <Navbar />
-      <div className="container">
+      <div className="container mx-auto px-4 py-8">
         <Routes>
-
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<LoginForm />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
           <Route path="/profile" element={<Profile />} />
-
-
-          <Route path="/posts" element={<PostsList />} />
-          <Route path="/posts/create" element={<CreatePost />} />
-          <Route path="/posts/edit/:id" element={<EditPost />} />
-          <Route path="/posts/:id" element={<PostDetails />} />
-
-          <Route path="/tutorials" element={<TutorialsList />} />
-          <Route path="/tutorials/create" element={<CreateTutorial />} />
-          <Route path="/tutorials/edit/:id" element={<EditTutorial />} />
-          <Route path="/tutorials/:id" element={<TutorialDetails />} />
-
-          <Route path="/forum" element={<ForumList />} />
-          <Route path="/forum/create" element={<CreateForumPost />} />
-          <Route path="/forum/edit/:id" element={<EditForumPost />} />
-          <Route path="/forum/:id" element={<ForumPostDetails />} />
-
-          <Route path="/marketplace" element={<MarketplaceList />} />
-          <Route path="/marketplace/create" element={<CreateProduct />} />
-          <Route path="/marketplace/edit/:id" element={<EditProduct />} />
-          <Route path="/marketplace/:id" element={<ProductDetails />} />
-
-
-
-          <Route path="/admin/users" element={<UserManagement />} />
         </Routes>
       </div>
       <Footer />
@@ -68,8 +96,6 @@ function App() {
 }
 
 export default App;
-
-
 
 
 
