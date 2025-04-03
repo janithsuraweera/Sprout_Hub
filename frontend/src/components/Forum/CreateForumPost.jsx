@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import forumService from '../services/forumService';
+import forumService from '../../services/forumService';
 
 function CreateForumPost() {
   const [title, setTitle] = useState('');

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import forumService from '../services/forumService';
-import authService from '../services/authService';
+import forumService from '../../services/forumService';
+import authService from '../../services/authService';
 
 function ForumList() {
   const [forumPosts, setForumPosts] = useState([]);

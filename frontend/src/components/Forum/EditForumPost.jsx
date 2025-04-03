@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import forumService from '../services/forumService';
+import forumService from '../../services/forumService';
 
 function EditForumPost() {
   const [title, setTitle] = useState('');

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import tutorialService from '../services/tutorialService';
+import tutorialService from '../../services/tutorialService';
 
 function CreateTutorial() {
   const [title, setTitle] = useState('');

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import marketplaceService from '../services/marketplaceService';
-import authService from '../services/authService';
+import marketplaceService from '../../services/marketplaceService';
+import authService from '../../services/authService';
 
 function MarketplaceList() {
   const [products, setProducts] = useState([]);

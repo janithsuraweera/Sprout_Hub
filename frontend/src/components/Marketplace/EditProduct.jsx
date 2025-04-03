@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import marketplaceService from '../services/marketplaceService';
+import marketplaceService from '../../services/marketplaceService';
 
 function EditProduct() {
   const [name, setName] = useState('');

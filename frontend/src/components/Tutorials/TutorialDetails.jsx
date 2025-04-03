@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import tutorialService from '../services/tutorialService';
-import authService from '../services/authService';
+import tutorialService from '../../services/tutorialService';
+import authService from '../../services/authService';
 
 function TutorialDetails() {
   const [tutorial, setTutorial] = useState(null);
