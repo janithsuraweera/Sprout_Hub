@@ -27,9 +27,9 @@ public class UserServiceImpl implements UserService {
 
 
 
-        // user.setRole("ROLE_USER"); // පෙරනිමි භූමිකාව සකසන්න
+        user.setRole("USER");  // Default role
 
-        
+
         return userRepository.save(user);
     }
 
