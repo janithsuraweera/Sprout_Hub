@@ -1,30 +1,74 @@
+// import React, { useState } from 'react';
+// import authService from '../../services/authService';
+
+
+// const RegisterForm = ({ onRegisterSuccess }) => {
+//   const [username, setUsername] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [error, setError] = useState('');
+//   const [userRole, setUserRole] = useState(null); //new state for user role
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       const response = await authService.register(username, password);
+//       onRegisterSuccess(response); //main component request to pass the user data.
+//       setUserRole(response.role); //new state for user role  (role eka defalt dala tiyennema user kenek widiyata)
+//     } catch (err) {
+//       setError(err.message || 'Registration failed');
+//     }
+//   };
+
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       {error && <p style={{ color: 'red' }}>{error}</p>}
+//       <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+//       <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+//       <button type="submit">Register</button>
+//     </form>
+//   );
+// };
+
+// export default RegisterForm;
+
+
 import React, { useState } from 'react';
 import authService from '../../services/authService';
-
 
 const RegisterForm = ({ onRegisterSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [userRole, setUserRole] = useState(null); //new state for user role
+  const [userRole, setUserRole] = useState(null); // New state for user role
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await authService.register(username, password);
-      onRegisterSuccess(response); //main component request to pass the user data.
-      setUserRole(response.role); //new state for user role  (role eka defalt dala tiyennema user kenek widiyata)
+      onRegisterSuccess(response.data); // Pass user data to the main component
+      setUserRole(response.data.role); // Set user role
     } catch (err) {
-      setError(err.message || 'Registration failed');
+      setError(err.response?.data?.message || 'Registration failed');
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
       <button type="submit">Register</button>
+      {userRole && <p>Registration successful! Your role is: {userRole}</p>}
     </form>
   );
 };
