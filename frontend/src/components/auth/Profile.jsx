@@ -1,5 +1,4 @@
 import React from 'react';
-// import authService from '../services/authService';
 import authService from '../../services/authService';
 function Profile() {
   const user = authService.getCurrentUser();
@@ -14,7 +13,7 @@ function Profile() {
       <p>Username: {user.username}</p>
       <p>Email: {user.email}</p>
       <p>Role: {user.role}</p>
-      {/* Add other user information */}
+
     </div>
   );
 }
