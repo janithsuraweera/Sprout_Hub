@@ -37,7 +37,7 @@ function Navbar() {
         {/* Links */}
         <ul className="flex space-x-6">
           <li>
-            <Link to="/" className="hover:text-gray-200 transition duration-300">
+            <Link to="/home" className="hover:text-gray-200 transition duration-300">
               Home
             </Link>
           </li>
@@ -54,6 +54,14 @@ function Navbar() {
           <li>
             <Link to="/marketplace" className="hover:text-gray-200 transition duration-300">
               Marketplace
+            </Link>
+
+            
+          </li>
+
+          <li>
+            <Link to="/post" className="hover:text-gray-200 transition duration-300">
+              Post
             </Link>
           </li>
         </ul>
