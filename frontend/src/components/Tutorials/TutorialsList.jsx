@@ -23,24 +23,33 @@ function TutorialsList() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-center py-8">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="text-center text-red-500 py-8">Error: {error}</div>;
   }
 
   return (
-    <div>
-      <h2>Tutorials</h2>
-      <ul>
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl font-semibold mb-6">Tutorials</h2>
+      <ul className="space-y-2">
         {tutorials.map((tutorial) => (
-          <li key={tutorial.id}>
-            <Link to={`/tutorials/${tutorial.id}`}>{tutorial.title}</Link>
+          <li key={tutorial.id} className="border rounded p-4 hover:bg-gray-100">
+            <Link to={`/tutorials/${tutorial.id}`} className="text-blue-600 hover:underline">
+              {tutorial.title}
+            </Link>
           </li>
         ))}
       </ul>
-      {user && <Link to="/tutorials/create">Create Tutorial</Link>}
+      {user && (
+        <Link
+          to="/tutorials/create"
+          className="mt-4 inline-block bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+        >
+          Create Tutorial
+        </Link>
+      )}
     </div>
   );
 }
