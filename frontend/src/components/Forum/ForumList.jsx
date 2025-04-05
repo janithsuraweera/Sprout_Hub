@@ -23,24 +23,33 @@ function ForumList() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-center py-8">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="text-center text-red-500 py-8">Error: {error}</div>;
   }
 
   return (
-    <div>
-      <h2>Forum</h2>
-      <ul>
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl font-semibold mb-6">Forum</h2>
+      <ul className="space-y-2">
         {forumPosts.map((post) => (
-          <li key={post.id}>
-            <Link to={`/forum/${post.id}`}>{post.title}</Link>
+          <li key={post.id} className="border rounded p-4 hover:bg-gray-100">
+            <Link to={`/forum/${post.id}`} className="text-blue-600 hover:underline">
+              {post.title}
+            </Link>
           </li>
         ))}
       </ul>
-      {user && <Link to="/forum/create">Create Forum Post</Link>}
+      {user && (
+        <Link
+          to="/forum/create"
+          className="mt-4 inline-block bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+        >
+          Create Forum Post
+        </Link>
+      )}
     </div>
   );
 }

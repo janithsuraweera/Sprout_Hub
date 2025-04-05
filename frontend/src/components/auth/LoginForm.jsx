@@ -13,7 +13,7 @@ const LoginForm = ({ onLoginSuccess }) => {
     try {
       const response = await authService.login(username, password);
       onLoginSuccess(response); // Main component request to pass the user data.
-      navigate('/profile'); // Redirect to profile page after login
+      navigate('/home'); // Redirect to profile page after login
     } catch (err) {
       setError(err.message || 'Login failed');
     }

@@ -29,7 +29,7 @@ function Navbar() {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo or Brand Name */}
         <div className="text-xl font-semibold">
-          <Link to="/" className="text-white hover:text-gray-200">
+          <Link to="/home" className="text-white hover:text-gray-200">
             Sprout Hub
           </Link>
         </div>
@@ -51,12 +51,11 @@ function Navbar() {
               Forum
             </Link>
           </li>
+
           <li>
             <Link to="/marketplace" className="hover:text-gray-200 transition duration-300">
               Marketplace
-            </Link>
-
-            
+            </Link>           
           </li>
 
           <li>

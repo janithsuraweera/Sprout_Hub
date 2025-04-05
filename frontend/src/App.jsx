@@ -26,13 +26,16 @@ import HomePage from './components/Layout/HomePage';
 
 function App() {
   return (
+
+    
     <Router>
       <Navbar />
+
       <div className="container">
         <Routes>
 
-        <Route path="home" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
 
@@ -68,6 +71,17 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
 
 
 // import React from 'react';

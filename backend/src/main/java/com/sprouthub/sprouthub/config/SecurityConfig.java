@@ -40,9 +40,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/**").hasRole("USER")
 
                         // Allow access to the marketplace API
+                    
                         .requestMatchers("/api/marketplace/**").permitAll()
                         .requestMatchers("/api/tutorials/**").permitAll()
                         .requestMatchers("/api/forum/**").permitAll()
+                        
+                        
 
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
