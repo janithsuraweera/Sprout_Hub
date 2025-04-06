@@ -33,7 +33,7 @@ function App() {
 
       <div className="container">
         <Routes>
-
+        <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
