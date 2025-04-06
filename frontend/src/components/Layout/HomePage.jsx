@@ -24,7 +24,7 @@ function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {/* Product Card 1 */}
             <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-              <img src="/images/tomato.jpg" alt="Fresh Tomatoes" className="w-full h-64 object-cover" />
+              <img src="/src/assets/images/tomato.jpg" alt="Fresh Tomatoes" className="w-full h-64 object-cover" />
               <div className="p-8">
                 <h3 className="text-2xl font-semibold mb-3">Fresh Tomatoes</h3>
                 <p className="text-gray-600 mb-5">Ripe tomatoes from local farms.</p>
@@ -33,7 +33,7 @@ function HomePage() {
             </div>
             {/* Product Card 2 */}
             <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-              <img src="/images/rice.jpg" alt="Organic Rice" className="w-full h-64 object-cover" />
+              <img src="/src/assets/images/rice.jpg" alt="Organic Rice" className="w-full h-64 object-cover" />
               <div className="p-8">
                 <h3 className="text-2xl font-semibold mb-3">Organic Rice</h3>
                 <p className="text-gray-600 mb-5">Premium chemical-free organic rice.</p>
@@ -42,7 +42,7 @@ function HomePage() {
             </div>
             {/* Product Card 3 */}
             <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-              <img src="/images/mango.jpg" alt="Organic Mango" className="w-full h-64 object-cover" />
+              <img src="/src/assets/images/mango.jpg" alt="Organic Mango" className="w-full h-64 object-cover" />
               <div className="p-8">
                 <h3 className="text-2xl font-semibold mb-3">Organic Mango</h3>
                 <p className="text-gray-600 mb-5">Premium chemical-free organic mango.</p>

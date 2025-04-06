@@ -45,6 +45,7 @@ const LoginForm = ({ onLoginSuccess }) => {
           >
             Login
           </button>
+          
         </form>
         <div className="text-center mt-4">
           <p>Don't have an account?</p>
