@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authHeader from '../services/authHeader';
 
-const API_BASE_URL = 'http://localhost:8082/api'; // Replace with API base URL
+const API_BASE_URL = 'http://localhost:8082/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
