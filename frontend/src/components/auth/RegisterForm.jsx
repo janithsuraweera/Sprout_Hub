@@ -12,8 +12,7 @@ const RegisterForm = ({ onRegisterSuccess }) => {
     e.preventDefault();
     try {
       const response = await authService.register(username, password);
-      onRegisterSuccess(response); // Main component request to pass the user data.
-      navigate('/profile'); // Redirect to profile page after registration
+      navigate('/login'); // Redirect to login page after registration
     } catch (err) {
       setError(err.message || 'Registration failed');
     }
