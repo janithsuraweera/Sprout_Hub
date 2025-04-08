@@ -37,13 +37,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        
                         .requestMatchers("/api/user/**").hasRole("USER")
 
                         // Allow access to the marketplace API
                     
                         .requestMatchers("/api/marketplace/**").permitAll()
+                        .requestMatchers("/api/marketplace/**").permitAll()
                         .requestMatchers("/api/tutorials/**").permitAll()
                         .requestMatchers("/api/forum/**").permitAll()
+                        .requestMatchers("/api/posts/**").permitAll()
                         
                         
 

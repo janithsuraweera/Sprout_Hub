@@ -12,7 +12,7 @@ const LoginForm = ({ onLoginSuccess }) => {
     e.preventDefault();
     try {
       const response = await authService.login(username, password);
-
+      
       navigate('/home'); 
     } catch (err) {
       setError(err.message || 'Login failed');
