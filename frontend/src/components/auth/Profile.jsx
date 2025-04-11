@@ -1,42 +1,86 @@
-import React, { useState } from 'react';
+import React from 'react';
 import authService from '../../services/authService';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { FiLogOut, FiLock, FiKey, FiUser, FiInfo } from 'react-icons/fi';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
-function ForgotPassword() {
-  const [username, setUsername] = useState('');
-  const [message, setMessage] = useState('');
+function Profile() {
+  const user = authService.getCurrentUser();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    authService
-      .forgetPassword(username)
-      .then((response) => {
-        setMessage(response.data);
-      })
-      .catch((error) => {
-        setMessage(error.response.data);
-      });
+  const handleLogout = () => {
+    authService.logout();
+    navigate('/');
   };
 
-  return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
-      <h2>Forgot Password</h2>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-        />
-        <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          Submit
-        </button>
-      </form>
-      {message && <p style={{ color: message.includes('success') ? 'green' : 'red', marginTop: '10px' }}>{message}</p>}
-      <Link to="/" style={{ marginTop: '20px', display: 'block', textAlign: 'center' }}>Back to Profile</Link>
-    </div>
-  );
+  const handleResetPassword = () => {
+    navigate('/reset-password');
+  };
+
+  const handleForgotPassword = () => {
+    navigate('/forgot-password');
+  };
+
+  if (user) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+          <h2 className="text-2xl font-semibold mb-6 text-center">Profile</h2>
+
+          <Tabs>
+            <TabList className="flex border-b">
+              <Tab className="flex items-center p-2 cursor-pointer border-r">
+                <FiUser className="mr-2" />
+                User Info
+              </Tab>
+              <Tab className="flex items-center p-2 cursor-pointer">
+                <FiInfo className="mr-2" />
+                Other Info
+              </Tab>
+            </TabList>
+
+            <TabPanel>
+              <p className="text-lg font-medium">Username: {user.username}</p>
+              <div className="mt-4 space-y-2">
+                <button
+                  onClick={handleResetPassword}
+                  className="flex items-center justify-center p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition w-full"
+                >
+                  <FiLock className="mr-2" />
+                  Reset Password
+                </button>
+                <button
+                  onClick={handleForgotPassword}
+                  className="flex items-center justify-center p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition w-full"
+                >
+                  <FiKey className="mr-2" />
+                  Forgot Password
+                </button>
+              </div>
+            </TabPanel>
+
+            <TabPanel>
+              <p className="text-lg font-medium">Role: {user.role}</p>
+              {/* ඔබට අවශ්‍ය නම් තවත් තොරතුරු මෙහි ඇතුලත් කරන්න */}
+            </TabPanel>
+          </Tabs>
+
+          <div className="text-center mt-6">
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-center p-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition w-full"
+            >
+              <FiLogOut className="mr-2" />
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  } else {
+    return null;
+  }
 }
 
-export default ForgotPassword;
+export default Profile;
