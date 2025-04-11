@@ -23,6 +23,8 @@ import Register from './components/auth/RegisterForm';
 import Profile from './components/auth/Profile';
 import UserManagement from './components/Admin/UserManagement';
 import HomePage from './components/Layout/HomePage';
+import ResetPassword from './components/ResetPassword';
+import ForgotPassword from './components/ForgotPassword';
 
 function App() {
 
@@ -62,6 +64,9 @@ function App() {
           <Route path="/marketplace/edit/:id" element={<EditProduct />} />
           <Route path="/marketplace/:id" element={<ProductDetails />} />
 
+
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
 
           <Route path="/admin/users" element={<UserManagement />} />

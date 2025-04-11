@@ -11,6 +11,15 @@ function Profile() {
     navigate('/');
   };
 
+
+  const handleResetPassword = () => {
+    navigate('/reset-password'); // Reset Password page එකට navigate කරන්න
+  };
+
+  const handleForgotPassword = () => {
+    navigate('/forgot-password'); // Forgot Password page එකට navigate කරන්න
+  };
+
 if(user){
   return (
   
@@ -29,6 +38,22 @@ if(user){
           >
             Logout
           </button>
+
+          <button // Added button for Reset Password
+              onClick={handleResetPassword}
+              className="p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition mb-2" // Added mb-2
+            >
+              Reset Password
+            </button>
+            <button // Added button for Forgot Password
+              onClick={handleForgotPassword}
+              className="p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+            >
+              Forgot Password
+            </button>
+
+
+          
         </div>
       </div>
     </div>
