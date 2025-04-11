@@ -41,12 +41,19 @@ function Profile() {
             </TabList>
 
             <TabPanel>
-              <p className="text-lg font-medium">Username: {user.username}</p>
+              <div className="bg-gray-50 p-4 rounded-md mb-4">
+                <p className="text-lg font-medium">
+                  <span className="font-semibold text-blue-600">Username:</span> {user.username}
+                </p>
+              </div>
             </TabPanel>
 
             <TabPanel>
-              <p className="text-lg font-medium">Role: {user.role}</p>
-              {/* ඔබට අවශ්‍ය නම් තවත් තොරතුරු මෙහි ඇතුලත් කරන්න */}
+              <div className="bg-gray-50 p-4 rounded-md mb-4">
+                <p className="text-lg font-medium">
+                  <span className="font-semibold text-green-600">Role:</span> {user.role}
+                </p>
+              </div>
               <div className="mt-4 space-y-2">
                 <button
                   onClick={handleResetPassword}
