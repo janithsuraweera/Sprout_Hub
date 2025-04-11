@@ -8,6 +8,7 @@ function Profile() {
     return <div>Please log in to view your profile.</div>;
   }
 
+  
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
