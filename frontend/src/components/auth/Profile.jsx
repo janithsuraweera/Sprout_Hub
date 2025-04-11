@@ -1,68 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import authService from '../../services/authService';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-function Profile() {
-  const user = authService.getCurrentUser();
-  const navigate = useNavigate();
+function ForgotPassword() {
+  const [username, setUsername] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handleLogout = () => {
-    authService.logout();
-    navigate('/');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    authService
+      .forgetPassword(username)
+      .then((response) => {
+        setMessage(response.data);
+      })
+      .catch((error) => {
+        setMessage(error.response.data);
+      });
   };
 
-
-  const handleResetPassword = () => {
-    navigate('/reset-password'); // Reset Password page එකට navigate කරන්න
-  };
-
-  const handleForgotPassword = () => {
-    navigate('/forgot-password'); // Forgot Password page එකට navigate කරන්න
-  };
-
-if(user){
   return (
-  
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Profile</h2>
-        <p className="text-lg font-medium">Username: {user.username}</p>
-        {/* <p className="text-lg font-medium">Email: {user.email}</p> */}
-        <p className="text-lg font-medium">Role: {user.role}</p>
-        <div className="text-center mt-6">
-          
-          
-          <button
-           onClick={handleLogout}
-            className="p-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-          >
-            Logout
-          </button>
-
-          <button // Added button for Reset Password
-              onClick={handleResetPassword}
-              className="p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition mb-2" // Added mb-2
-            >
-              Reset Password
-            </button>
-            <button // Added button for Forgot Password
-              onClick={handleForgotPassword}
-              className="p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-            >
-              Forgot Password
-            </button>
-
-
-          
-        </div>
-      </div>
+    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+      <h2>Forgot Password</h2>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+        />
+        <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Submit
+        </button>
+      </form>
+      {message && <p style={{ color: message.includes('success') ? 'green' : 'red', marginTop: '10px' }}>{message}</p>}
+      <Link to="/" style={{ marginTop: '20px', display: 'block', textAlign: 'center' }}>Back to Profile</Link>
     </div>
   );
-  }else{
-    return null;
-    }
-      
 }
 
-
-export default Profile;
+export default ForgotPassword;
