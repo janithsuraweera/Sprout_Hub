@@ -42,6 +42,11 @@ function Profile() {
 
             <TabPanel>
               <p className="text-lg font-medium">Username: {user.username}</p>
+            </TabPanel>
+
+            <TabPanel>
+              <p className="text-lg font-medium">Role: {user.role}</p>
+              {/* ඔබට අවශ්‍ය නම් තවත් තොරතුරු මෙහි ඇතුලත් කරන්න */}
               <div className="mt-4 space-y-2">
                 <button
                   onClick={handleResetPassword}
@@ -58,11 +63,6 @@ function Profile() {
                   Forgot Password
                 </button>
               </div>
-            </TabPanel>
-
-            <TabPanel>
-              <p className="text-lg font-medium">Role: {user.role}</p>
-              {/* ඔබට අවශ්‍ය නම් තවත් තොරතුරු මෙහි ඇතුලත් කරන්න */}
             </TabPanel>
           </Tabs>
 
