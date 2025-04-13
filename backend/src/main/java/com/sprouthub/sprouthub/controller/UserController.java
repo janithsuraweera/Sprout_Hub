@@ -57,7 +57,8 @@ public class UserController {
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("role", userDetails.getAuthorities().iterator().next().getAuthority());
-
+            response.put("username", userDetails.getUsername());
+            
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Login failed: " + e.getMessage());
