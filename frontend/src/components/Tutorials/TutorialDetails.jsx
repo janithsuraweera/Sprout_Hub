@@ -18,4 +18,21 @@ function TutorialDetails() {
     return <div className="text-center py-8">Loading...</div>;
   }
 
-  
+  return (
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl font-semibold mb-4">{tutorial.title}</h2>
+      <p className="text-gray-700 mb-2">{tutorial.description}</p>
+      <p className="text-blue-600">Video URL: {tutorial.videoUrl}</p>
+      {user && (
+        <Link
+          to={`/tutorials/edit/${tutorial.id}`}
+          className="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+        >
+          Edit Tutorial
+        </Link>
+      )}
+    </div>
+  );
+}
+
+export default TutorialDetails;
