@@ -16,7 +16,7 @@ function CreatePost() {
       })
       .catch((err) => {
         console.error(err);
-        // Error handling
+        // error handling 
       });
   };
 
