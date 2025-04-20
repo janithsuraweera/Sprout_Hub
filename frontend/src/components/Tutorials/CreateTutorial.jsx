@@ -44,15 +44,7 @@ function CreateTutorial() {  //keep track of what the user types into each field
               className="mt-1 p-2 border rounded w-full"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Video URL:</label>
-            <input
-              type="text"
-              value={videoUrl}
-              onChange={(e) => setVideoUrl(e.target.value)}
-              className="mt-1 p-2 border rounded w-full"
-            />
-          </div>
+         
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
