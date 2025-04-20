@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import postService from '../../services/postService';
-
+//post creation
 function CreatePost() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
