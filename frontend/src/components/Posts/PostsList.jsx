@@ -7,7 +7,7 @@ function PostsList() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const user = authService.getCurrentUser(); // Get current user
+  const user = authService.getCurrentUser(); // Get the current user
 
   useEffect(() => {
     postService
@@ -17,7 +17,7 @@ function PostsList() {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err.message);
+        setError(err.message); 
         setLoading(false);
       });
   }, []);
