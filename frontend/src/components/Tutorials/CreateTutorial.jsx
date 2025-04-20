@@ -53,12 +53,7 @@ function CreateTutorial() {  //keep track of what the user types into each field
               className="mt-1 p-2 border rounded w-full"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Create
-          </button>
+          
         </form>
       </div>
     </div>
