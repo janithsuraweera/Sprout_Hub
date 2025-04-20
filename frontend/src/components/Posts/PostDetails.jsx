@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import postService from '../../services/postService';
 import authService from '../../services/authService';
-
+//Details
 function PostDetails() {
   const [post, setPost] = useState(null);
   const { id } = useParams();
