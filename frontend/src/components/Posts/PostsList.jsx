@@ -9,6 +9,7 @@ function PostsList() {
   const [error, setError] = useState(null);
   const user = authService.getCurrentUser(); // Get the current user
 
+  
   useEffect(() => {
     postService
       .getAllPosts()
