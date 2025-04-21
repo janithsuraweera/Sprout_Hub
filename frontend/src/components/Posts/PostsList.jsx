@@ -23,7 +23,8 @@ function PostsList() {
       });
   }, []);
 
-  if (loading) {
+  
+  if(loading) {
     return <div>Loading...</div>;
   }
 
