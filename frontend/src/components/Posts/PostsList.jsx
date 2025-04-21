@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import postService from '../../services/postService';
 import authService from '../../services/authService'; // Add authService import
-
+// Showing the post List
 function PostsList() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
