@@ -35,5 +35,9 @@ public class TutorialController {
         return ResponseEntity.ok(tutorialService.updateTutorial(id, tutorial));
     }
 
-    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTutorial(@PathVariable String id) {
+        tutorialService.deleteTutorial(id);
+        return ResponseEntity.ok().build();
+    }
 }
