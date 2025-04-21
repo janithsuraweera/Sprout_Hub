@@ -42,7 +42,7 @@ function PostsList() {
           </li>
         ))}
       </ul>
-      {user && <Link to="/posts/create">Create Post</Link>} {/*Conditional rendering for logged in user */}
+      {user && <Link to="/posts/create">Create Post</Link>} {/*conditional Rendering endering for logged in user */}
     </div>
   );
 }
