@@ -25,6 +25,7 @@ function PostDetails() {
       {user && <Link to={`/posts/edit/${post.id}`}>Edit Post</Link>}
     </div>
   );
+  
 }
 
 export default PostDetails;
