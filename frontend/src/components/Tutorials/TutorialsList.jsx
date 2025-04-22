@@ -35,7 +35,7 @@ function TutorialsList() {
       <h2 className="text-2xl font-semibold mb-6">Tutorials</h2>
       <ul className="space-y-2">
         {tutorials.map((tutorial) => (
-          <li key={tutorial.id} className="border rounded p-4 hover:bg-gray-100">
+          <li key={tutorial.id} className="border rounded p-4 hover:bg-gray-110">
             <Link to={`/tutorials/${tutorial.id}`} className="text-blue-600 hover:underline">
               {tutorial.title}
             </Link>
