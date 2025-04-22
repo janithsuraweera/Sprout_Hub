@@ -17,7 +17,7 @@ function PostDetails() {
   if (!post) {
     return <div>Loading...</div>;
   }
-
+ //return
   return (
     <div>
       <h2>{post.title}</h2>
