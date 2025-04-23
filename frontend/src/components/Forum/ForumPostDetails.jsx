@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-
-
+import forumService from '../../services/forumService';
+import authService from '../../services/authService';
 
 function ForumPostDetails() {
   const [forumPost, setForumPost] = useState(null);
