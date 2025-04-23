@@ -25,7 +25,7 @@ function ForumPostDetails() {
       {user && (
         <Link
           to={`/forum/edit/${forumPost.id}`}
-          className="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          className="mt-5 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
         >
           Edit Forum Post
         </Link>

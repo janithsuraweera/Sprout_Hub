@@ -52,7 +52,7 @@ function EditForumPost() {
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-400 text-white rounded hover:bg-blue-700"
+            className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
             Update Post
           </button>
