@@ -34,7 +34,7 @@ function CreateForumPost() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-800">Content:</label>
+            <label className="block text-sm font-medium text-gray-700">Content:</label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
