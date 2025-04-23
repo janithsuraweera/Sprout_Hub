@@ -21,7 +21,7 @@ function ForumPostDetails() {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-semibold mb-4">{forumPost.title}</h2>
-      <p className="text-gray-800">{forumPost.content}</p>
+      <p className="text-gray-700">{forumPost.content}</p>
       {user && (
         <Link
           to={`/forum/edit/${forumPost.id}`}
