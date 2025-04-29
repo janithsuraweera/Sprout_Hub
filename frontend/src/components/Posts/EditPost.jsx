@@ -24,7 +24,7 @@ function EditPost() {
       })
       .catch((err) => {
         console.error(err);
-        // Handling errors
+        // Handling the errors
       });
   };
 
