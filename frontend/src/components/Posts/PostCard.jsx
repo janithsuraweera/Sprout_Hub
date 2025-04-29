@@ -1,1 +1,1 @@
-//card to be edited
+//cards yet to be edited
