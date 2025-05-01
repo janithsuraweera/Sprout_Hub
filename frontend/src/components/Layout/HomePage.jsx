@@ -1,86 +1,210 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
+import authService from '../../services/authService';
 
 function HomePage() {
+  const user = authService.getCurrentUser();
+
   return (
-    <div className="font-sans">
-      {/* Hero Section (Full Width) */}
-      <header className="bg-gradient-to-r from-green-400 to-green-600 text-white text-center py-32 w-full">
-        <div className="w-full">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">SproutHub: Your Fresh Farm</h1>
-          <p className="text-xl md:text-2xl mb-10">Direct connection between farmers and consumers.</p>
-          <div className="flex justify-center">
-            <button className="bg-white text-green-600 font-semibold py-4 px-12 rounded-full hover:bg-green-100 transition duration-300">
-              Explore Fresh Products
-            </button>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
+            <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+              <div className="sm:text-center lg:text-left">
+                <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                  <span className="block xl:inline">Welcome to</span>{' '}
+                  <span className="block text-blue-600 xl:inline">Sprout Hub</span>
+                </h1>
+                <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                  Your one-stop platform for learning, sharing, and growing together. Join our community of passionate individuals.
+                </p>
+                <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                  {!user ? (
+                    <>
+                      <div className="rounded-md shadow">
+                        <Link
+                          to="/register"
+                          className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
+                        >
+                          Get Started
+                        </Link>
+                      </div>
+                      <div className="mt-3 sm:mt-0 sm:ml-3">
+                        <Link
+                          to="/login"
+                          className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10"
+                        >
+                          Sign In
+                        </Link>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="rounded-md shadow">
+                      <Link
+                        to="/posts"
+                        className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
+                      >
+                        Explore Posts
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </main>
           </div>
         </div>
-      </header>
+        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+          <img
+            className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
+            src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80"
+            alt=""
+          />
+        </div>
+      </div>
 
-      {/* Featured Products Section (Full Width) */}
-      <section className="bg-gray-100 py-24 w-full">
-        <div className="w-full">
-          <h2 className="text-4xl font-semibold mb-12 text-center">Featured Products</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {/* Product Card 1 */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-              <img src="/src/assets/images/tomato.jpg" alt="Fresh Tomatoes" className="w-full h-64 object-cover" />
-              <div className="p-8">
-                <h3 className="text-2xl font-semibold mb-3">Fresh Tomatoes</h3>
-                <p className="text-gray-600 mb-5">Ripe tomatoes from local farms.</p>
-                <a href="/products/1" className="text-green-600 font-semibold hover:underline">View Details</a>
+      {/* Features Section */}
+      <div className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:text-center">
+            <h2 className="text-base text-blue-600 font-semibold tracking-wide uppercase">Features</h2>
+            <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+              Everything you need to grow
+            </p>
+            <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+              Our platform provides all the tools you need to learn, share, and connect with others.
+            </p>
+          </div>
+
+          <div className="mt-10">
+            <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+              {/* Posts Feature */}
+              <div className="relative">
+                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                  </svg>
+                </div>
+                <div className="ml-16">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">Posts</h3>
+                  <p className="mt-2 text-base text-gray-500">
+                    Share your thoughts and experiences with the community. Create, read, and interact with posts.
+                  </p>
+                </div>
+              </div>
+
+              {/* Tutorials Feature */}
+              <div className="relative">
+                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <div className="ml-16">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">Tutorials</h3>
+                  <p className="mt-2 text-base text-gray-500">
+                    Access comprehensive tutorials and guides to enhance your knowledge and skills.
+                  </p>
+                </div>
+              </div>
+
+              {/* Forum Feature */}
+              <div className="relative">
+                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+                <div className="ml-16">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">Forum</h3>
+                  <p className="mt-2 text-base text-gray-500">
+                    Join discussions, ask questions, and share knowledge with our active community.
+                  </p>
+                </div>
+              </div>
+
+              {/* Marketplace Feature */}
+              <div className="relative">
+                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </div>
+                <div className="ml-16">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">Marketplace</h3>
+                  <p className="mt-2 text-base text-gray-500">
+                    Buy and sell products in our secure and user-friendly marketplace.
+                  </p>
+                </div>
               </div>
             </div>
-            {/* Product Card 2 */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-              <img src="/src/assets/images/rice.jpg" alt="Organic Rice" className="w-full h-64 object-cover" />
-              <div className="p-8">
-                <h3 className="text-2xl font-semibold mb-3">Organic Rice</h3>
-                <p className="text-gray-600 mb-5">Premium chemical-free organic rice.</p>
-                <a href="/products/2" className="text-green-600 font-semibold hover:underline">View Details</a>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      {!user && (
+        <div className="bg-blue-600">
+          <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
+            <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+              <span className="block">Ready to dive in?</span>
+              <span className="block text-blue-200">Start your journey today.</span>
+            </h2>
+            <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+              <div className="inline-flex rounded-md shadow">
+                <Link
+                  to="/register"
+                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50"
+                >
+                  Get started
+                </Link>
+              </div>
+              <div className="ml-3 inline-flex rounded-md shadow">
+                <Link
+                  to="/login"
+                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800"
+                >
+                  Sign in
+                </Link>
               </div>
             </div>
-            {/* Product Card 3 */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-              <img src="/src/assets/images/mango.jpg" alt="Organic Mango" className="w-full h-64 object-cover" />
-              <div className="p-8">
-                <h3 className="text-2xl font-semibold mb-3">Organic Mango</h3>
-                <p className="text-gray-600 mb-5">Premium chemical-free organic mango.</p>
-                <a href="/products/3" className="text-green-600 font-semibold hover:underline">View Details</a>
-              </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <footer className="bg-white">
+        <div className="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
+          <nav className="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
+            <div className="px-5 py-2">
+              <Link to="/about" className="text-base text-gray-500 hover:text-gray-900">
+                About
+              </Link>
             </div>
-            {/* More products */}
-          </div>
+            <div className="px-5 py-2">
+              <Link to="/contact" className="text-base text-gray-500 hover:text-gray-900">
+                Contact
+              </Link>
+            </div>
+            <div className="px-5 py-2">
+              <Link to="/privacy" className="text-base text-gray-500 hover:text-gray-900">
+                Privacy
+              </Link>
+            </div>
+            <div className="px-5 py-2">
+              <Link to="/terms" className="text-base text-gray-500 hover:text-gray-900">
+                Terms
+              </Link>
+            </div>
+          </nav>
+          <p className="mt-8 text-center text-base text-gray-400">
+            &copy; 2024 Sprout Hub. All rights reserved.
+          </p>
         </div>
-      </section>
-
-      {/* Categories Section (Full Width) */}
-      <section className="bg-green-50 py-24 w-full">
-        <div className="w-full">
-          <h2 className="text-4xl font-semibold mb-12 text-center">Explore Categories</h2>
-          <div className="flex flex-wrap justify-center gap-6">
-            <a href="/categories/vegetables" className="bg-white text-green-600 font-semibold py-3 px-8 rounded-full hover:bg-green-100 transition duration-300">Vegetables</a>
-            <a href="/categories/fruits" className="bg-white text-green-600 font-semibold py-3 px-8 rounded-full hover:bg-green-100 transition duration-300">Fruits</a>
-            <a href="/categories/grains" className="bg-white text-green-600 font-semibold py-3 px-8 rounded-full hover:bg-green-100 transition duration-300">Grains</a>
-            {/* More categories */}
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action Section (Full Width) */}
-      <section className="bg-green-100 py-24 w-full">
-        <div className="w-full text-center">
-          <h2 className="text-4xl font-semibold mb-8">Join SproutHub Today!</h2>
-          <p className="text-xl mb-10">Discover fresh products and support local farmers.</p>
-          <div className="flex justify-center">
-            <Link to="/register" className="bg-green-600 text-white font-semibold py-4 px-12 rounded-full hover:bg-green-700 transition duration-300">
-              Sign Up
-            </Link>
-          </div>
-        </div>
-      </section>
+      </footer>
     </div>
   );
 }
 
-export default HomePage;
+export default HomePage; 
