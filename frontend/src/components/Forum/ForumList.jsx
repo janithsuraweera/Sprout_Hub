@@ -49,10 +49,10 @@ function ForumList() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Forum Discussions</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Forum Discussions</h1>
           <Link
             to="/forum/create"
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -66,22 +66,22 @@ function ForumList() {
           {posts.map((post) => (
             <div
               key={post.id}
-              className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
+              className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
             >
               <div className="p-6">
                 <div className="flex items-center justify-between">
                   <Link
                     to={`/forum/${post.id}`}
-                    className="text-xl font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
+                    className="text-xl font-semibold text-gray-900 hover:text-blue-600"
                   >
                     {post.title}
                   </Link>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                     {post.category}
                   </span>
                 </div>
 
-                <p className="mt-2 text-gray-600 dark:text-gray-300 line-clamp-2">
+                <p className="mt-2 text-gray-600 line-clamp-2">
                   {post.content}
                 </p>
 
@@ -89,19 +89,19 @@ function ForumList() {
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center">
                       <UserCircleIcon className="h-5 w-5 text-gray-400 mr-1" />
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                      <span className="text-sm text-gray-500">
                         {post.author}
                       </span>
                     </div>
                     <div className="flex items-center">
                       <CalendarIcon className="h-5 w-5 text-gray-400 mr-1" />
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                      <span className="text-sm text-gray-500">
                         {new Date(post.createdAt).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="flex items-center">
                       <ClockIcon className="h-5 w-5 text-gray-400 mr-1" />
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                      <span className="text-sm text-gray-500">
                         {new Date(post.createdAt).toLocaleTimeString()}
                       </span>
                     </div>
@@ -109,7 +109,7 @@ function ForumList() {
 
                   <div className="flex items-center">
                     <ChatBubbleLeftRightIcon className="h-5 w-5 text-gray-400 mr-1" />
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                    <span className="text-sm text-gray-500">
                       {post.comments?.length || 0} comments
                     </span>
                   </div>
@@ -122,8 +122,8 @@ function ForumList() {
         {posts.length === 0 && (
           <div className="text-center py-12">
             <ChatBubbleLeftRightIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No discussions yet</h3>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No discussions yet</h3>
+            <p className="mt-1 text-sm text-gray-500">
               Get started by creating a new discussion.
             </p>
             <div className="mt-6">
