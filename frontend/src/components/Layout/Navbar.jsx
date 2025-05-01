@@ -8,7 +8,8 @@ import {
   ShoppingCartIcon,
   UserCircleIcon,
   SunIcon,
-  MoonIcon
+  MoonIcon,
+  ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 
 function Navbar() {
@@ -111,9 +112,13 @@ function Navbar() {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
+                    className="group relative bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium inline-flex items-center transition-all duration-300 overflow-hidden"
                   >
-                    Logout
+                    <span className="absolute inset-0 w-0 bg-blue-800 transition-all duration-300 ease-out group-hover:w-full"></span>
+                    <span className="relative flex items-center">
+                      <ArrowRightOnRectangleIcon className="h-5 w-5 mr-2 transform group-hover:translate-x-1 transition-transform duration-300" />
+                      Logout
+                    </span>
                   </button>
                 </div>
               </div>
@@ -210,9 +215,13 @@ function Navbar() {
               </Link>
               <button
                 onClick={handleLogout}
-                className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
+                className="group relative block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
-                Logout
+                <span className="absolute inset-0 w-0 bg-gray-200 dark:bg-gray-600 transition-all duration-300 ease-out group-hover:w-full"></span>
+                <span className="relative flex items-center">
+                  <ArrowRightOnRectangleIcon className="h-5 w-5 inline-block mr-2 transform group-hover:translate-x-1 transition-transform duration-300" />
+                  Logout
+                </span>
               </button>
             </div>
           ) : (
