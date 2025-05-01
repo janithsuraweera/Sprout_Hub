@@ -1,93 +1,202 @@
-import React from 'react';
-import authService from '../../services/authService';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiLogOut, FiLock, FiKey, FiUser, FiInfo } from 'react-icons/fi';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
+import authService from '../../services/authService';
+import {
+  UserCircleIcon,
+  PencilIcon,
+  EnvelopeIcon,
+  CalendarIcon,
+  ClockIcon,
+  CheckCircleIcon,
+  XCircleIcon
+} from '@heroicons/react/24/outline';
 
 function Profile() {
-  const user = authService.getCurrentUser();
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    bio: ''
+  });
 
-  const handleLogout = () => {
-    authService.logout();
-    navigate('/');
+  useEffect(() => {
+    const currentUser = authService.getCurrentUser();
+    if (!currentUser) {
+      navigate('/login');
+      return;
+    }
+
+    // Simulate loading user data
+    setTimeout(() => {
+      setUser({
+        ...currentUser,
+        name: 'John Doe',
+        email: 'john@example.com',
+        bio: 'Passionate about technology and learning new things.',
+        joinDate: '2024-01-01',
+        lastLogin: '2024-03-20',
+        isActive: true
+      });
+      setFormData({
+        name: 'John Doe',
+        email: 'john@example.com',
+        bio: 'Passionate about technology and learning new things.'
+      });
+      setLoading(false);
+    }, 1000);
+  }, [navigate]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleResetPassword = () => {
-    navigate('/reset-password');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Simulate saving changes
+    setTimeout(() => {
+      setUser(prev => ({
+        ...prev,
+        ...formData
+      }));
+      setEditMode(false);
+    }, 1000);
   };
 
-  const handleForgotPassword = () => {
-    navigate('/forgot-password');
-  };
-
-  if (user) {
+  if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-          <h2 className="text-2xl font-semibold mb-6 text-center">Profile</h2>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
-          <Tabs>
-            <TabList className="flex border-b">
-              <Tab className="flex items-center p-2 cursor-pointer border-r">
-                <FiUser className="mr-2" />
-                User Info
-              </Tab>
-              <Tab className="flex items-center p-2 cursor-pointer">
-                <FiInfo className="mr-2" />
-                Other Info
-              </Tab>
-            </TabList>
-
-            <TabPanel>
-              <div className="bg-gray-50 p-4 rounded-md mb-4">
-                <p className="text-lg font-medium">
-                  <span className="font-semibold text-blue-600">Username:</span> {user.username}
-                </p>
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
+          {/* Profile Header */}
+          <div className="relative h-48 bg-gradient-to-r from-blue-500 to-blue-600">
+            <div className="absolute -bottom-16 left-8">
+              <div className="h-32 w-32 rounded-full border-4 border-white dark:border-gray-800 bg-white dark:bg-gray-700 flex items-center justify-center">
+                <UserCircleIcon className="h-24 w-24 text-gray-400" />
               </div>
-            </TabPanel>
+            </div>
+            <div className="absolute bottom-4 right-4">
+              <button
+                onClick={() => setEditMode(!editMode)}
+                className="bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 p-2 rounded-full shadow-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-300"
+              >
+                <PencilIcon className="h-6 w-6" />
+              </button>
+            </div>
+          </div>
 
-            <TabPanel>
-              <div className="bg-gray-50 p-4 rounded-md mb-4">
-                <p className="text-lg font-medium">
-                  <span className="font-semibold text-green-600">Role:</span> {user.role}
-                </p>
+          {/* Profile Content */}
+          <div className="pt-20 px-8 pb-8">
+            {editMode ? (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="bio" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Bio
+                  </label>
+                  <textarea
+                    name="bio"
+                    id="bio"
+                    rows="3"
+                    value={formData.bio}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  />
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setEditMode(false)}
+                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="space-y-6">
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{user.name}</h1>
+                  <p className="text-gray-500 dark:text-gray-400">{user.bio}</p>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center text-gray-500 dark:text-gray-400">
+                    <EnvelopeIcon className="h-5 w-5 mr-2" />
+                    <span>{user.email}</span>
+                  </div>
+                  <div className="flex items-center text-gray-500 dark:text-gray-400">
+                    <CalendarIcon className="h-5 w-5 mr-2" />
+                    <span>Joined on {new Date(user.joinDate).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex items-center text-gray-500 dark:text-gray-400">
+                    <ClockIcon className="h-5 w-5 mr-2" />
+                    <span>Last login: {new Date(user.lastLogin).toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center">
+                    {user.isActive ? (
+                      <>
+                        <CheckCircleIcon className="h-5 w-5 text-green-500 mr-2" />
+                        <span className="text-green-500">Active</span>
+                      </>
+                    ) : (
+                      <>
+                        <XCircleIcon className="h-5 w-5 text-red-500 mr-2" />
+                        <span className="text-red-500">Inactive</span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="mt-4 space-y-2">
-                <button
-                  onClick={handleResetPassword}
-                  className="flex items-center justify-center p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition w-full"
-                >
-                  <FiLock className="mr-2" />
-                  Reset Password
-                </button>
-                <button
-                  onClick={handleForgotPassword}
-                  className="flex items-center justify-center p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition w-full"
-                >
-                  <FiKey className="mr-2" />
-                  Forgot Password
-                </button>
-              </div>
-            </TabPanel>
-          </Tabs>
-
-          <div className="text-center mt-6">
-            <button
-              onClick={handleLogout}
-              className="flex items-center justify-center p-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition w-full"
-            >
-              <FiLogOut className="mr-2" />
-              Logout
-            </button>
+            )}
           </div>
         </div>
       </div>
-    );
-  } else {
-    return null;
-  }
+    </div>
+  );
 }
 
-export default Profile;
+export default Profile; 
