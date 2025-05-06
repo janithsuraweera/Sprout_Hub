@@ -30,36 +30,38 @@ function Navbar() {
                 Sprout Hub
               </Link>
             </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link
-                to="/posts"
-                className="border-transparent text-gray-500 dark:text-gray-300 hover:border-blue-500 hover:text-gray-700 dark:hover:text-gray-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                <HomeIcon className="h-5 w-5 mr-1" />
-                Posts
-              </Link>
-              <Link
-                to="/tutorials"
-                className="border-transparent text-gray-500 dark:text-gray-300 hover:border-blue-500 hover:text-gray-700 dark:hover:text-gray-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                <BookOpenIcon className="h-5 w-5 mr-1" />
-                Tutorials
-              </Link>
-              <Link
-                to="/forum"
-                className="border-transparent text-gray-500 dark:text-gray-300 hover:border-blue-500 hover:text-gray-700 dark:hover:text-gray-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                <ChatBubbleLeftRightIcon className="h-5 w-5 mr-1" />
-                Forum
-              </Link>
-              <Link
-                to="/marketplace"
-                className="border-transparent text-gray-500 dark:text-gray-300 hover:border-blue-500 hover:text-gray-700 dark:hover:text-gray-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                <ShoppingCartIcon className="h-5 w-5 mr-1" />
-                Marketplace
-              </Link>
-            </div>
+            {user && (
+              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+                <Link
+                  to="/posts"
+                  className="border-transparent text-gray-500 dark:text-gray-300 hover:border-blue-500 hover:text-gray-700 dark:hover:text-gray-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >
+                  <HomeIcon className="h-5 w-5 mr-1" />
+                  Posts
+                </Link>
+                <Link
+                  to="/tutorials"
+                  className="border-transparent text-gray-500 dark:text-gray-300 hover:border-blue-500 hover:text-gray-700 dark:hover:text-gray-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >
+                  <BookOpenIcon className="h-5 w-5 mr-1" />
+                  Tutorials
+                </Link>
+                <Link
+                  to="/forum"
+                  className="border-transparent text-gray-500 dark:text-gray-300 hover:border-blue-500 hover:text-gray-700 dark:hover:text-gray-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >
+                  <ChatBubbleLeftRightIcon className="h-5 w-5 mr-1" />
+                  Forum
+                </Link>
+                <Link
+                  to="/marketplace"
+                  className="border-transparent text-gray-500 dark:text-gray-300 hover:border-blue-500 hover:text-gray-700 dark:hover:text-gray-100 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >
+                  <ShoppingCartIcon className="h-5 w-5 mr-1" />
+                  Marketplace
+                </Link>
+              </div>
+            )}
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             {user ? (
@@ -123,36 +125,38 @@ function Navbar() {
 
       {/* Mobile menu */}
       <div className={`${isOpen ? 'block' : 'hidden'} sm:hidden`}>
-        <div className="pt-2 pb-3 space-y-1">
-          <Link
-            to="/posts"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-blue-500"
-          >
-            <HomeIcon className="h-5 w-5 inline-block mr-2" />
-            Posts
-          </Link>
-          <Link
-            to="/tutorials"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-blue-500"
-          >
-            <BookOpenIcon className="h-5 w-5 inline-block mr-2" />
-            Tutorials
-          </Link>
-          <Link
-            to="/forum"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-blue-500"
-          >
-            <ChatBubbleLeftRightIcon className="h-5 w-5 inline-block mr-2" />
-            Forum
-          </Link>
-          <Link
-            to="/marketplace"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-blue-500"
-          >
-            <ShoppingCartIcon className="h-5 w-5 inline-block mr-2" />
-            Marketplace
-          </Link>
-        </div>
+        {user && (
+          <div className="pt-2 pb-3 space-y-1">
+            <Link
+              to="/posts"
+              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-blue-500"
+            >
+              <HomeIcon className="h-5 w-5 inline-block mr-2" />
+              Posts
+            </Link>
+            <Link
+              to="/tutorials"
+              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-blue-500"
+            >
+              <BookOpenIcon className="h-5 w-5 inline-block mr-2" />
+              Tutorials
+            </Link>
+            <Link
+              to="/forum"
+              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-blue-500"
+            >
+              <ChatBubbleLeftRightIcon className="h-5 w-5 inline-block mr-2" />
+              Forum
+            </Link>
+            <Link
+              to="/marketplace"
+              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-blue-500"
+            >
+              <ShoppingCartIcon className="h-5 w-5 inline-block mr-2" />
+              Marketplace
+            </Link>
+          </div>
+        )}
         {user ? (
           <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
             <div className="mt-3 space-y-1">
