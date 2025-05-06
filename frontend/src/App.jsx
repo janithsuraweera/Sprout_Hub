@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 import PostsList from './components/Posts/PostsList';
@@ -55,7 +57,10 @@ function App() {
   };
 
   return (
-    <Router>
+    <Router future={{ 
+      v7_startTransition: true,
+      v7_relativeSplatPath: true 
+    }}>
       <div className={`min-h-screen transition-colors duration-200 ${darkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
         <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
         <main className="container mx-auto px-4 py-8">
@@ -228,6 +233,18 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme={darkMode ? "dark" : "light"}
+        />
       </div>
     </Router>
   );
