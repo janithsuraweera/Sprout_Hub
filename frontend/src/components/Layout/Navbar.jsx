@@ -7,12 +7,10 @@ import {
   ChatBubbleLeftRightIcon, 
   ShoppingCartIcon,
   UserCircleIcon,
-  SunIcon,
-  MoonIcon,
   ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 
-function Navbar({ darkMode, toggleDarkMode }) {
+function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const user = authService.getCurrentUser();
@@ -23,7 +21,7 @@ function Navbar({ darkMode, toggleDarkMode }) {
   };
 
   return (
-    <nav className={`bg-white dark:bg-gray-800 shadow-lg transition-colors duration-200 ${darkMode ? 'dark' : ''}`}>
+    <nav className="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
@@ -64,16 +62,6 @@ function Navbar({ darkMode, toggleDarkMode }) {
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-md text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
-            >
-              {darkMode ? (
-                <SunIcon className="h-6 w-6" />
-              ) : (
-                <MoonIcon className="h-6 w-6" />
-              )}
-            </button>
             {user ? (
               <div className="ml-3 relative">
                 <div className="flex items-center space-x-4">
@@ -165,20 +153,8 @@ function Navbar({ darkMode, toggleDarkMode }) {
             Marketplace
           </Link>
         </div>
-        <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center px-4">
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-md text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
-            >
-              {darkMode ? (
-                <SunIcon className="h-6 w-6" />
-              ) : (
-                <MoonIcon className="h-6 w-6" />
-              )}
-            </button>
-          </div>
-          {user ? (
+        {user ? (
+          <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
             <div className="mt-3 space-y-1">
               <Link
                 to="/profile"
@@ -198,7 +174,9 @@ function Navbar({ darkMode, toggleDarkMode }) {
                 </span>
               </button>
             </div>
-          ) : (
+          </div>
+        ) : (
+          <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
             <div className="mt-3 space-y-1">
               <Link
                 to="/login"
@@ -213,8 +191,8 @@ function Navbar({ darkMode, toggleDarkMode }) {
                 Register
               </Link>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </nav>
   );
