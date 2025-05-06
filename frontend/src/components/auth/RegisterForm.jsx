@@ -32,14 +32,31 @@ const RegisterForm = () => {
   };
 
   const validateForm = () => {
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
+      setError('All fields are required');
       return false;
     }
+
+    if (formData.username.length < 3) {
+      setError('Username must be at least 3 characters long');
+      return false;
+    }
+
+    if (!formData.email.includes('@') || !formData.email.includes('.')) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters long');
       return false;
     }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return false;
+    }
+
     return true;
   };
 
@@ -54,10 +71,13 @@ const RegisterForm = () => {
     setLoading(true);
 
     try {
-      await authService.register(formData.username, formData.email, formData.password);
-      navigate('/login');
+      const response = await authService.register(formData.username, formData.email, formData.password);
+      if (response) {
+        navigate('/login', { state: { message: 'Registration successful! Please login.' } });
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      console.error('Registration error:', err);
+      setError(err.response?.data || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
