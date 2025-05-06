@@ -43,6 +43,10 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         try {
+            if (credentials.get("username") == null || credentials.get("password") == null) {
+                return ResponseEntity.badRequest().body("Username and password are required");
+            }
+
             System.out.println("Attempting login for user: " + credentials.get("username"));
 
             Authentication authentication = authenticationManager.authenticate(
@@ -62,9 +66,10 @@ public class UserController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Login failed: " + e.getMessage());
-            return ResponseEntity.badRequest().body("Invalid username or password.......");
+            if (e.getMessage().contains("Bad credentials")) {
+                return ResponseEntity.badRequest().body("Invalid username or password");
+            }
+            return ResponseEntity.badRequest().body("Authentication failed: " + e.getMessage());
         }
-
-
     }
 }

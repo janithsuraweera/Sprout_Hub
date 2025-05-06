@@ -33,10 +33,15 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      await authService.login(formData.username, formData.password);
-      navigate('/home');
+      const response = await authService.login(formData.username, formData.password);
+      if (response.token) {
+        navigate('/home');
+      } else {
+        setError('Login failed. Please check your credentials.');
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      console.error('Login error:', err);
+      setError(err.response?.data || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
