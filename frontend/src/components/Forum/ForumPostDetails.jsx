@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { 
   UserCircleIcon,
   CalendarIcon,
@@ -11,6 +12,7 @@ import {
   UserGroupIcon,
   ArrowLeftIcon
 } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import forumService from '../../services/forumService';
 import authService from '../../services/authService';
 

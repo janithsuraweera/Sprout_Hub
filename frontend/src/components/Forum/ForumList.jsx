@@ -1,36 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  PlusIcon, 
-  ChatBubbleLeftRightIcon, 
-  UserCircleIcon,
-  CalendarIcon,
-  ClockIcon
-} from '@heroicons/react/24/outline';
+import { toast } from 'react-toastify';
 import forumService from '../../services/forumService';
 import authService from '../../services/authService';
+import { 
+  PencilIcon, 
+  TrashIcon, 
+  ChatBubbleLeftIcon,
+  HeartIcon,
+  ClockIcon,
+  UserCircleIcon
+} from '@heroicons/react/24/outline';
 
-function ForumList() {
+const ForumList = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const user = authService.getCurrentUser();
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        const response = await forumService.getAllForumPosts();
-        setPosts(response.data);
-      } catch (err) {
-        setError('Failed to load forum posts');
-      } finally {
-        setLoading(false);
-      }
-    };
-
+    const user = authService.getCurrentUser();
+    setCurrentUser(user);
     fetchPosts();
   }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const response = await forumService.getAllForumPosts();
+      setPosts(response.data);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      toast.error('Error fetching posts');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this post?')) {
+      try {
+        await forumService.deleteForumPost(id);
+        toast.success('Post deleted successfully');
+        fetchPosts();
+      } catch (error) {
+        console.error('Error deleting post:', error);
+        toast.error('Error deleting post');
+      }
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const options = { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  };
 
   if (loading) {
     return (
@@ -40,106 +67,98 @@ function ForumList() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Forum Discussions</h1>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Forum</h1>
+        {currentUser && (
           <Link
             to="/forum/create"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200"
           >
-            <PlusIcon className="h-5 w-5 mr-2" />
             New Post
           </Link>
-        </div>
+        )}
+      </div>
 
-        <div className="grid gap-6">
-          {posts.map((post) => (
-            <div
-              key={post.id}
-              className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
-            >
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <Link
-                    to={`/forum/${post.id}`}
-                    className="text-xl font-semibold text-gray-900 hover:text-blue-600"
-                  >
+      <div className="space-y-6">
+        {posts.map((post) => (
+          <div
+            key={post.id}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200"
+          >
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center space-x-3">
+                <UserCircleIcon className="h-10 w-10 text-gray-400" />
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                     {post.title}
-                  </Link>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                    {post.category}
-                  </span>
-                </div>
-
-                <p className="mt-2 text-gray-600 line-clamp-2">
-                  {post.content}
-                </p>
-
-                <div className="mt-4 flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center">
-                      <UserCircleIcon className="h-5 w-5 text-gray-400 mr-1" />
-                      <span className="text-sm text-gray-500">
-                        {post.author}
-                      </span>
-                    </div>
-                    <div className="flex items-center">
-                      <CalendarIcon className="h-5 w-5 text-gray-400 mr-1" />
-                      <span className="text-sm text-gray-500">
-                        {new Date(post.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex items-center">
-                      <ClockIcon className="h-5 w-5 text-gray-400 mr-1" />
-                      <span className="text-sm text-gray-500">
-                        {new Date(post.createdAt).toLocaleTimeString()}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center">
-                    <ChatBubbleLeftRightIcon className="h-5 w-5 text-gray-400 mr-1" />
-                    <span className="text-sm text-gray-500">
-                      {post.comments?.length || 0} comments
-                    </span>
-                  </div>
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    by {post.author?.username || 'Unknown User'}
+                  </p>
                 </div>
               </div>
+              <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
+                <ClockIcon className="h-5 w-5" />
+                <span className="text-sm">{formatDate(post.createdAt)}</span>
+              </div>
             </div>
-          ))}
-        </div>
+
+            <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
+              {post.content}
+            </p>
+
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-1">
+                  <ChatBubbleLeftIcon className="h-5 w-5 text-gray-500" />
+                  <span className="text-sm text-gray-500">{post.commentCount || 0}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <HeartIcon className="h-5 w-5 text-gray-500" />
+                  <span className="text-sm text-gray-500">{post.likeCount || 0}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Link
+                  to={`/forum/${post.id}`}
+                  className="text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  Read More
+                </Link>
+                {currentUser && (currentUser.id === post.author?.id || currentUser.role === 'ADMIN') && (
+                  <>
+                    <Link
+                      to={`/forum/edit/${post.id}`}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      <PencilIcon className="h-5 w-5" />
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(post.id)}
+                      className="text-gray-500 hover:text-red-700"
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
 
         {posts.length === 0 && (
           <div className="text-center py-12">
-            <ChatBubbleLeftRightIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No discussions yet</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Get started by creating a new discussion.
+            <p className="text-gray-500 dark:text-gray-400 text-lg">
+              No posts yet
             </p>
-            <div className="mt-6">
-              <Link
-                to="/forum/create"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <PlusIcon className="h-5 w-5 mr-2" />
-                New Post
-              </Link>
-            </div>
           </div>
         )}
       </div>
     </div>
   );
-}
+};
 
 export default ForumList;
