@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   UserGroupIcon, 
   DocumentTextIcon, 
@@ -7,8 +7,27 @@ import {
   ChartBarIcon,
   CogIcon
 } from '@heroicons/react/24/outline';
+import userService from '../../services/userService';
 
 function AdminDashboard({ darkMode }) {
+  const [userCount, setUserCount] = useState(null);
+
+  useEffect(() => {
+    // Fetch user count
+    const fetchUserCount = async () => {
+      try {
+        const res = await userService.getAllUsers();
+        setUserCount(res.data.length);
+      } catch (err) {
+        setUserCount('N/A');
+      }
+    };
+    fetchUserCount();
+    // Real-time update every 10 seconds
+    const interval = setInterval(fetchUserCount, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     // Check localStorage for saved dark mode preference
     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
@@ -27,10 +46,10 @@ function AdminDashboard({ darkMode }) {
   }, [darkMode]);
 
   const stats = [
-    { name: 'Total Users', value: '1,234', icon: UserGroupIcon, color: 'bg-blue-500' },
-    { name: 'Total Posts', value: '567', icon: DocumentTextIcon, color: 'bg-green-500' },
-    { name: 'Forum Posts', value: '890', icon: ChatBubbleLeftRightIcon, color: 'bg-purple-500' },
-    { name: 'Marketplace Items', value: '123', icon: ShoppingCartIcon, color: 'bg-yellow-500' },
+    { name: 'Total Users', value: userCount !== null ? userCount : '...', icon: UserGroupIcon, color: 'bg-blue-500', card: 'hover:shadow-lg hover:scale-105 transition-transform duration-200' },
+    { name: 'Total Posts', value: '567', icon: DocumentTextIcon, color: 'bg-green-500', card: 'hover:shadow-lg hover:scale-105 transition-transform duration-200' },
+    { name: 'Forum Posts', value: '890', icon: ChatBubbleLeftRightIcon, color: 'bg-purple-500', card: 'hover:shadow-lg hover:scale-105 transition-transform duration-200' },
+    { name: 'Marketplace Items', value: '123', icon: ShoppingCartIcon, color: 'bg-yellow-500', card: 'hover:shadow-lg hover:scale-105 transition-transform duration-200' },
   ];
 
   const recentActivities = [
@@ -53,11 +72,11 @@ function AdminDashboard({ darkMode }) {
           {stats.map((stat) => (
             <div
               key={stat.name}
-              className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-200"
+              className={`bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-200 ${stat.card}`}
             >
               <div className="p-5">
                 <div className="flex items-center">
-                  <div className={`flex-shrink-0 rounded-md p-3 ${stat.color}`}>
+                  <div className={`flex-shrink-0 rounded-md p-3 ${stat.color} shadow-md`}>
                     <stat.icon className="h-6 w-6 text-white" />
                   </div>
                   <div className="ml-5 w-0 flex-1">
