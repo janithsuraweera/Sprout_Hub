@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlay, FaClock, FaUser } from 'react-icons/fa';
+import mangoImage from '../../assets/images/mango.jpg';
 
 function TutorialCard({ tutorial }) {
   // Function to get video thumbnail from YouTube URL
   const getThumbnailUrl = (videoUrl) => {
-    if (!videoUrl) return '/default-thumbnail.jpg';
+    if (!videoUrl) return mangoImage;
     
     // Handle YouTube URLs
     if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
@@ -21,7 +22,7 @@ function TutorialCard({ tutorial }) {
       return `https://vumbnail.com/${videoId}.jpg`;
     }
     
-    return '/default-thumbnail.jpg';
+    return mangoImage;
   };
 
   return (
@@ -31,6 +32,10 @@ function TutorialCard({ tutorial }) {
           src={getThumbnailUrl(tutorial.videoUrl)}
           alt={tutorial.title}
           className="w-full h-48 object-cover"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = mangoImage;
+          }}
         />
         <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
           <FaPlay className="text-white text-4xl" />
