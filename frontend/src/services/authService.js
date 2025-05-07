@@ -18,6 +18,7 @@ const register = async (username, email, password) => {
     username,
     email,
     password,
+    role: 'ADMIN'
   });
   return response.data;
 };
