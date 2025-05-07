@@ -47,7 +47,7 @@ function Navbar({ darkMode, toggleDarkMode }) {
                 Sprout Hub
               </Link>
             </div>
-            {user && (
+            {user && user.role !== 'ROLE_ADMIN' && (
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                 <Link
                   to="/posts"
@@ -187,7 +187,7 @@ function Navbar({ darkMode, toggleDarkMode }) {
 
       {/* Mobile menu */}
       <div className={`${isOpen ? 'block' : 'hidden'} sm:hidden`}>
-        {user && (
+        {user && user.role !== 'ROLE_ADMIN' && (
           <div className="pt-2 pb-3 space-y-1">
             <Link
               to="/posts"
