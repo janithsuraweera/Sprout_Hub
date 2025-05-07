@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import postService from '../../services/postService';
 import authService from '../../services/authService'; // Add authService import
-
+// Showing the post List
 function PostsList() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const user = authService.getCurrentUser(); // Get current user
+  const user = authService.getCurrentUser(); // Get the current user
 
+  
   useEffect(() => {
     postService
       .getAllPosts()
@@ -22,7 +23,8 @@ function PostsList() {
       });
   }, []);
 
-  if (loading) {
+  
+  if(loading) {
     return <div>Loading...</div>;
   }
 
@@ -40,7 +42,7 @@ function PostsList() {
           </li>
         ))}
       </ul>
-      {user && <Link to="/posts/create">Create Post</Link>} {/*Conditional rendering for logged in user */}
+      {user && <Link to="/posts/create">Create Post</Link>} {/*conditional Rendering endering for logged in user */}
     </div>
   );
 }

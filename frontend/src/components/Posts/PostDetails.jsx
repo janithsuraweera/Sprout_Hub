@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import postService from '../../services/postService';
 import authService from '../../services/authService';
-
+//Post details
 function PostDetails() {
   const [post, setPost] = useState(null);
   const { id } = useParams();
@@ -17,7 +17,7 @@ function PostDetails() {
   if (!post) {
     return <div>Loading...</div>;
   }
-
+ //return
   return (
     <div>
       <h2>{post.title}</h2>
@@ -25,6 +25,6 @@ function PostDetails() {
       {user && <Link to={`/posts/edit/${post.id}`}>Edit Post</Link>}
     </div>
   );
-}
 
+}
 export default PostDetails;
