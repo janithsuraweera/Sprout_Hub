@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
 import { 
@@ -6,7 +6,7 @@ import {
   BookOpenIcon, 
   ChatBubbleLeftRightIcon, 
   ShoppingCartIcon,
-  UserCircleIcon,
+  UserIcon,
   ArrowRightOnRectangleIcon,
   SunIcon,
   MoonIcon
@@ -14,6 +14,8 @@ import {
 
 function Navbar({ darkMode, toggleDarkMode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef = useRef(null);
   const navigate = useNavigate();
   const user = authService.getCurrentUser();
 
@@ -21,6 +23,19 @@ function Navbar({ darkMode, toggleDarkMode }) {
     authService.logout();
     navigate('/login');
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-200">
@@ -83,25 +98,44 @@ function Navbar({ darkMode, toggleDarkMode }) {
             </button>
 
             {user ? (
-              <div className="ml-3 relative">
+              <div className="ml-3 relative" ref={profileRef}>
                 <div className="flex items-center space-x-4">
-                  <Link
-                    to="/profile"
-                    className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 px-3 py-2 rounded-md text-sm font-medium inline-flex items-center"
-                  >
-                    <UserCircleIcon className="h-5 w-5 mr-1" />
-                    Profile
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="group relative bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium inline-flex items-center transition-all duration-300 overflow-hidden"
-                  >
-                    <span className="absolute inset-0 w-0 bg-blue-800 transition-all duration-300 ease-out group-hover:w-full"></span>
-                    <span className="relative flex items-center">
-                      <ArrowRightOnRectangleIcon className="h-5 w-5 mr-2 transform group-hover:translate-x-1 transition-transform duration-300" />
-                      Logout
-                    </span>
-                  </button>
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsProfileOpen(!isProfileOpen)}
+                      className="flex items-center space-x-2 focus:outline-none"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-medium text-sm hover:bg-blue-700 transition-colors duration-200">
+                        {user?.username?.charAt(0).toUpperCase() || 'U'}
+                      </div>
+                    </button>
+                    
+                    {/* Dropdown Menu */}
+                    {isProfileOpen && (
+                      <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
+                        <div className="py-1" role="menu" aria-orientation="vertical">
+                          <Link
+                            to="/profile"
+                            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            role="menuitem"
+                            onClick={() => setIsProfileOpen(false)}
+                          >
+                            Profile
+                          </Link>
+                          <button
+                            onClick={() => {
+                              setIsProfileOpen(false);
+                              handleLogout();
+                            }}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            role="menuitem"
+                          >
+                            Logout
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ) : (
@@ -199,8 +233,12 @@ function Navbar({ darkMode, toggleDarkMode }) {
                 to="/profile"
                 className="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
-                <UserCircleIcon className="h-5 w-5 inline-block mr-2" />
-                Profile
+                <div className="flex items-center">
+                  <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-medium text-sm">
+                    {user?.username?.charAt(0).toUpperCase() || 'U'}
+                  </div>
+                  <span className="ml-2">Profile</span>
+                </div>
               </Link>
               <button
                 onClick={handleLogout}
