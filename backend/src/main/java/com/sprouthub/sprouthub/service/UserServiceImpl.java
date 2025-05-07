@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -25,14 +27,13 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        if(user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("ROLE_USER");  // Default role with ROLE_ prefix
+        } else if (!user.getRole().startsWith("ROLE_")) {
+            user.setRole("ROLE_" + user.getRole());  // Add ROLE_ prefix if not present
+        }
 
-        if(
-            user.getRole() == null || user.getRole().isEmpty()) {
-            user.setRole("USER");  // Default role
-            }
-
-
-            return userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -43,12 +44,17 @@ public class UserServiceImpl implements UserService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRole())
+                .roles(user.getRole().replace("ROLE_", ""))  // Remove ROLE_ prefix for Spring Security
                 .build();
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

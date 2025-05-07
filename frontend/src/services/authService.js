@@ -13,10 +13,12 @@ const login = async (username, password) => {
   return response.data;
 };
 
-const register = async (username, password) => {
+const register = async (username, email, password) => {
   const response = await axios.post(API_URL + 'register', {
     username,
+    email,
     password,
+    role: 'ROLE_ADMIN'
   });
   return response.data;
 };
