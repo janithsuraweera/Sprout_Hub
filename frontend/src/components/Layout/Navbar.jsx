@@ -19,6 +19,13 @@ function Navbar({ darkMode, toggleDarkMode }) {
   const navigate = useNavigate();
   const user = authService.getCurrentUser();
 
+  useEffect(() => {
+    // Redirect admin users to admin dashboard
+    if (user?.role === 'ROLE_ADMIN' && window.location.pathname === '/') {
+      navigate('/admin-dashboard');
+    }
+  }, [user, navigate]);
+
   const handleLogout = () => {
     authService.logout();
     navigate('/login');
