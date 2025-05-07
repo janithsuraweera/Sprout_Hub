@@ -23,12 +23,14 @@ import ProductDetails from './components/Marketplace/ProductDetails';
 import Login from './components/auth/LoginForm';
 import Register from './components/auth/RegisterForm';
 import Profile from './components/auth/Profile';
-import UserManagement from './components/Admin/UserManagement';
+import UserManagement from './components/admin/UserManagement';
+import AdminDashboard from './components/admin/AdminDashboard';
 import HomePage from './components/Layout/HomePage';
 import ResetPassword from './components/ResetPassword';
 import ForgotPassword from './components/ForgotPassword';
 import PrivateRoute from './components/auth/PrivateRoute';
 import authService from './services/authService';
+
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -226,6 +228,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <UserManagement />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin-dashboard"
+              element={
+                <PrivateRoute>
+                  <AdminDashboard />
                 </PrivateRoute>
               }
             />
