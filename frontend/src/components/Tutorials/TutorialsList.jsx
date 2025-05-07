@@ -10,18 +10,24 @@ function TutorialsList() {
   const [error, setError] = useState(null);
   const user = authService.getCurrentUser();
 
+  const fetchTutorials = async () => {
+    try {
+      const response = await tutorialService.getAllTutorials();
+      setTutorials(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    tutorialService
-      .getAllTutorials()
-      .then((response) => {
-        setTutorials(response.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+    fetchTutorials();
   }, []);
+
+  const handleDelete = (tutorialId) => {
+    setTutorials(tutorials.filter(tutorial => tutorial.id !== tutorialId));
+  };
 
   if (loading) {
     return (
@@ -74,7 +80,11 @@ function TutorialsList() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {tutorials.map((tutorial) => (
-            <TutorialCard key={tutorial.id} tutorial={tutorial} />
+            <TutorialCard
+              key={tutorial.id}
+              tutorial={tutorial}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
       )}

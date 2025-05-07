@@ -1,9 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaPlay, FaClock, FaUser } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaPlay, FaClock, FaUser, FaEdit, FaTrash } from 'react-icons/fa';
 import mangoImage from '../../assets/images/mango.jpg';
+import tutorialService from '../../services/tutorialService';
+import { toast } from 'react-toastify';
 
-function TutorialCard({ tutorial }) {
+function TutorialCard({ tutorial, onDelete }) {
+  const navigate = useNavigate();
+
   // Function to get video thumbnail from YouTube URL
   const getThumbnailUrl = (videoUrl) => {
     if (!videoUrl) return mangoImage;
@@ -23,6 +27,30 @@ function TutorialCard({ tutorial }) {
     }
     
     return mangoImage;
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (window.confirm('Are you sure you want to delete this tutorial?')) {
+      try {
+        await tutorialService.deleteTutorial(tutorial.id);
+        toast.success('Tutorial deleted successfully');
+        if (onDelete) {
+          onDelete(tutorial.id);
+        }
+      } catch (error) {
+        toast.error('Failed to delete tutorial');
+        console.error('Delete error:', error);
+      }
+    }
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/tutorials/edit/${tutorial.id}`);
   };
 
   return (
@@ -62,6 +90,23 @@ function TutorialCard({ tutorial }) {
             <FaClock className="mr-1" />
             <span>{tutorial.duration || 'N/A'}</span>
           </div>
+        </div>
+
+        <div className="mt-4 flex justify-end space-x-2">
+          <button
+            onClick={handleUpdate}
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors duration-200"
+          >
+            <FaEdit className="mr-2" />
+            Update
+          </button>
+          <button
+            onClick={handleDelete}
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors duration-200"
+          >
+            <FaTrash className="mr-2" />
+            Delete
+          </button>
         </div>
       </div>
     </div>
