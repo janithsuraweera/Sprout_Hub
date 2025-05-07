@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import tutorialService from '../../services/tutorialService';
 import authService from '../../services/authService';
 import TutorialCard from './TutorialCard';
@@ -11,6 +11,7 @@ function TutorialsList() {
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const user = authService.getCurrentUser();
+  const navigate = useNavigate();
 
   const fetchTutorials = async () => {
     try {
