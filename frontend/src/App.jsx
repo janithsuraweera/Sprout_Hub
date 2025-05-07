@@ -235,7 +235,7 @@ function App() {
               path="/admin-dashboard"
               element={
                 <PrivateRoute>
-                  <AdminDashboard />
+                  <AdminDashboard darkMode={darkMode} />
                 </PrivateRoute>
               }
             />

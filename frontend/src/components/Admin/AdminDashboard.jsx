@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
   UserGroupIcon, 
   DocumentTextIcon, 
@@ -8,7 +8,16 @@ import {
   CogIcon
 } from '@heroicons/react/24/outline';
 
-function AdminDashboard() {
+function AdminDashboard({ darkMode }) {
+  useEffect(() => {
+    // Update dark mode class on document
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
   const stats = [
     { name: 'Total Users', value: '1,234', icon: UserGroupIcon, color: 'bg-blue-500' },
     { name: 'Total Posts', value: '567', icon: DocumentTextIcon, color: 'bg-green-500' },
@@ -24,7 +33,7 @@ function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className={`min-h-screen transition-colors duration-200 ${darkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
