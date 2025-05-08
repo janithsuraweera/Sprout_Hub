@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import postService from '../../services/postService';
-
+//post edit 
 function EditPost() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -24,7 +24,7 @@ function EditPost() {
       })
       .catch((err) => {
         console.error(err);
-        // Error handling
+        // Handling errors
       });
   };
 
