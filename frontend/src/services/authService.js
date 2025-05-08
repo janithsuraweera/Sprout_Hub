@@ -18,7 +18,7 @@ const register = async (username, email, password) => {
     username,
     email,
     password,
-    role: 'ROLE_ADMIN'
+    role: 'ROLE_USER'
   });
   return response.data;
 };

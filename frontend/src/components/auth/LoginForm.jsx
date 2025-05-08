@@ -35,7 +35,12 @@ const LoginForm = () => {
     try {
       const response = await authService.login(formData.username, formData.password);
       if (response.token) {
-        navigate('/home');
+        // Redirect based on user role
+        if (response.role === 'ROLE_ADMIN') {
+          navigate('/admin-dashboard');
+        } else {
+          navigate('/home');
+        }
       } else {
         setError('Login failed. Please check your credentials.');
       }
