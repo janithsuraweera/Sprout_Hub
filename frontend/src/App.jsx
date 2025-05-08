@@ -69,7 +69,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<HomePage />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login darkMode={darkMode} />} />
             <Route path="/register" element={<Register />} />
             <Route
               path="/profile"
