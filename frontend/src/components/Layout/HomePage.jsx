@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
 import userService from '../../services/userService';
@@ -21,30 +21,59 @@ function HomePage() {
   const [userResults, setUserResults] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [stats, setStats] = useState({
-    totalUsers: 0,
+    forumCount: 0,
     activePosts: 0,
     tutorials: 0,
     marketplaceItems: 0
   });
   const navigate = useNavigate();
+  const mounted = useRef(false);
+  const controllerRef = useRef(null);
+
+  const fetchUsers = useCallback(async () => {
+    if (!mounted.current) return;
+
+    // Cancel any existing request
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+    }
+
+    // Create new AbortController
+    controllerRef.current = new AbortController();
+
+    try {
+      const res = await userService.getAllUsers();
+      if (res.data && mounted.current) {
+        setAllUsers(res.data);
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.log('Request was cancelled');
+        return;
+      }
+      console.error('Error fetching users:', error);
+      if (mounted.current) {
+        setAllUsers([]);
+      }
+    }
+  }, []);
 
   useEffect(() => {
+    mounted.current = true;
+
     if (user) {
-      userService.getAllUsers()
-        .then(res => {
-          if (res.data) {
-            setAllUsers(res.data);
-            setStats(prev => ({ ...prev, totalUsers: res.data.length }));
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching users:', error);
-          setAllUsers([]);
-        });
+      fetchUsers();
     } else {
       setAllUsers([]);
     }
-  }, [user]);
+
+    return () => {
+      mounted.current = false;
+      if (controllerRef.current) {
+        controllerRef.current.abort();
+      }
+    };
+  }, [user, fetchUsers]);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -106,6 +135,8 @@ function HomePage() {
           <div className="flex items-center gap-2">
             <input
               type="text"
+              id="user-search"
+              name="user-search"
               className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
               placeholder="Search users by username or email..."
               value={search}
@@ -144,11 +175,11 @@ function HomePage() {
             <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
               <div className="flex items-center">
                 <div className="p-3 rounded-full bg-blue-100 text-blue-600">
-                  <UserGroupIcon className="h-6 w-6" />
+                  <ChatBubbleLeftRightIcon className="h-6 w-6" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Total Users</p>
-                  <p className="text-2xl font-semibold text-gray-900">{stats.totalUsers}</p>
+                  <p className="text-sm font-medium text-gray-500">Forum Posts</p>
+                  <p className="text-2xl font-semibold text-gray-900">{stats.forumCount}</p>
                 </div>
               </div>
             </div>
