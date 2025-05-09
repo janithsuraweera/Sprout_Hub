@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import forumService from '../../services/forumService';
 import authService from '../../services/authService';
+import userService from '../../services/userService';
 import { 
   PencilIcon, 
   TrashIcon, 
@@ -23,6 +24,9 @@ const ForumList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('recent');
+  const [likeModalPost, setLikeModalPost] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
+  const [usersLoading, setUsersLoading] = useState(false);
 
   const categories = [
     { id: 'all', name: 'All Topics', icon: '🌱' },
@@ -43,6 +47,15 @@ const ForumList = () => {
     setCurrentUser(user);
     fetchPosts();
   }, [selectedCategory, sortBy]);
+
+  useEffect(() => {
+    if (likeModalPost && allUsers.length === 0) {
+      setUsersLoading(true);
+      userService.getAllUsers().then(res => {
+        setAllUsers(res.data);
+      }).finally(() => setUsersLoading(false));
+    }
+  }, [likeModalPost]);
 
   const fetchPosts = async () => {
     try {
@@ -100,6 +113,24 @@ const ForumList = () => {
       minute: '2-digit'
     };
     return new Date(dateString).toLocaleDateString('en-US', options);
+  };
+
+  const handleLike = async (postId, liked) => {
+    try {
+      let updatedPost;
+      if (liked) {
+        const response = await forumService.unlikePost(postId);
+        updatedPost = response.data;
+      } else {
+        const response = await forumService.likePost(postId);
+        updatedPost = response.data;
+      }
+      setPosts((prevPosts) =>
+        prevPosts.map((p) => (p.id === postId ? { ...p, likes: updatedPost.likes, likedUsers: updatedPost.likedUsers } : p))
+      );
+    } catch (error) {
+      toast.error('Failed to update like status');
+    }
   };
 
   if (loading) {
@@ -225,10 +256,23 @@ const ForumList = () => {
                       <ChatBubbleLeftIcon className="h-5 w-5" />
                       {post.commentCount || 0}
                     </span>
-                    <span className="flex items-center gap-1">
-                      <HeartIcon className="h-5 w-5" />
-                      {post.likeCount || 0}
-                    </span>
+                    <button
+                      onClick={() => handleLike(post.id, post.likedUsers?.includes(currentUser?.id))}
+                      className={`flex items-center gap-1 px-2 py-1 rounded ${post.likedUsers?.includes(currentUser?.id) ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'} hover:bg-red-200`}
+                      disabled={!currentUser}
+                      title={!currentUser ? 'Please login to like or unlike' : post.likedUsers?.includes(currentUser?.id) ? 'Unlike' : 'Like'}
+                    >
+                      <HeartIcon className={`h-5 w-5 ${post.likedUsers?.includes(currentUser?.id) ? 'text-red-600' : 'text-gray-600'}`} />
+                      {post.likedUsers?.includes(currentUser?.id) ? 'Unlike' : 'Like'} {post.likes || 0}
+                    </button>
+                    {post.likedUsers && post.likedUsers.length > 0 && (
+                      <button
+                        className="text-xs text-blue-600 underline ml-2"
+                        onClick={() => setLikeModalPost(post)}
+                      >
+                        View Likes
+                      </button>
+                    )}
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <ClockIcon className="h-5 w-5" />
@@ -286,6 +330,40 @@ const ForumList = () => {
           </div>
         )}
       </div>
+
+      {likeModalPost && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-80">
+            <h3 className="text-lg font-semibold mb-4">Users who liked this post</h3>
+            <ul className="mb-4 max-h-40 overflow-y-auto">
+              {usersLoading ? (
+                <li className="text-gray-500">Loading...</li>
+              ) : likeModalPost.likedUsers && likeModalPost.likedUsers.length > 0 ? (
+                likeModalPost.likedUsers.map((userId) => {
+                  const user = allUsers.find(u => u.id === userId);
+                  return (
+                    <li key={userId} className="py-1 border-b text-gray-700">
+                      {user ? (
+                        <a href={`/profile/${user.username}`} className="text-blue-600 hover:underline">{user.username}</a>
+                      ) : (
+                        <span className="text-gray-400">Unknown User</span>
+                      )}
+                    </li>
+                  );
+                })
+              ) : (
+                <li className="text-gray-500">No likes yet</li>
+              )}
+            </ul>
+            <button
+              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              onClick={() => setLikeModalPost(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

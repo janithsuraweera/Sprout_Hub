@@ -49,6 +49,8 @@ public class ForumController {
         public Date createdAt;
         public String userId;
         public String authorUsername;
+        public List<String> likedUsers;
+        public int likes;
 
         public ForumPostDTO(ForumPost post, String authorUsername) {
             this.id = post.getId();
@@ -58,6 +60,8 @@ public class ForumController {
             this.createdAt = post.getCreatedAt();
             this.userId = post.getUserId();
             this.authorUsername = authorUsername;
+            this.likedUsers = post.getLikedUsers();
+            this.likes = post.getLikedUsers() != null ? post.getLikedUsers().size() : 0;
         }
     }
 
@@ -95,5 +99,47 @@ public class ForumController {
     public ResponseEntity<Void> deleteForumPost(@PathVariable String id) {
         forumService.deleteForumPost(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/like")
+    public ResponseEntity<ForumPostDTO> likePost(@PathVariable String id, @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+        ForumPost post = forumService.getForumPostById(id);
+        if (!post.getLikedUsers().contains(user.getId())) {
+            post.getLikedUsers().add(user.getId());
+            forumService.updateForumPost(id, post);
+        }
+        String authorUsername = null;
+        if (post.getUserId() != null) {
+            User author = userRepository.findById(post.getUserId()).orElse(null);
+            if (author != null) authorUsername = author.getUsername();
+        }
+        return ResponseEntity.ok(new ForumPostDTO(post, authorUsername));
+    }
+
+    @PostMapping("/{id}/unlike")
+    public ResponseEntity<ForumPostDTO> unlikePost(@PathVariable String id, @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+        ForumPost post = forumService.getForumPostById(id);
+        if (post.getLikedUsers().contains(user.getId())) {
+            post.getLikedUsers().remove(user.getId());
+            forumService.updateForumPost(id, post);
+        }
+        String authorUsername = null;
+        if (post.getUserId() != null) {
+            User author = userRepository.findById(post.getUserId()).orElse(null);
+            if (author != null) authorUsername = author.getUsername();
+        }
+        return ResponseEntity.ok(new ForumPostDTO(post, authorUsername));
     }
 }
