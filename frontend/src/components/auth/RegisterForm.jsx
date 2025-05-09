@@ -9,6 +9,7 @@ import {
   EnvelopeIcon
 } from '@heroicons/react/24/outline';
 import authService from '../../services/authService';
+import { GoogleLogin } from '@react-oauth/google';
 
 const RegisterForm = ({ darkMode }) => {
   const [formData, setFormData] = useState({
@@ -51,6 +52,16 @@ const RegisterForm = ({ darkMode }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLoginSuccess = (credentialResponse) => {
+    // credentialResponse.credential => JWT token from Google
+    // Send this token to your backend for verification & login/register
+    console.log(credentialResponse);
+  };
+
+  const handleGoogleLoginError = () => {
+    alert('Google Sign In Failed');
   };
 
   return (
@@ -214,6 +225,20 @@ const RegisterForm = ({ darkMode }) => {
             </button>
           </div>
         </form>
+        <div className="flex items-center my-4">
+          <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+          <span className={`mx-2 text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>or</span>
+          <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+        </div>
+        <div className="flex items-center justify-center w-full">
+          <div className="w-full">
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={handleGoogleLoginError}
+              theme={darkMode ? 'filled_black' : 'outline'}
+            />
+          </div>
+        </div>
         <div className="text-center mt-6">
           <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             Already have an account?{' '}

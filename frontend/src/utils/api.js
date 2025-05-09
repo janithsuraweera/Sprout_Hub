@@ -1,5 +1,6 @@
 import axios from 'axios';
 import authHeader from '../services/authHeader';
+import authService from '../services/authService';
 
 const API_BASE_URL = 'http://localhost:8082/api';
 
@@ -30,13 +31,13 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-//    console.log(error);
-    if (error.response && error.response.status === 401) {
-    
-
-      console.error('Unauthorized access:', error);
-      authService.logout(); 
-      window.location.href = '/login';
+    if (error.response) {
+      if (error.response.status === 401 || error.response.status === 403) {
+        // Handle unauthorized or forbidden access
+        console.error('Authentication error:', error);
+        authService.logout();
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
