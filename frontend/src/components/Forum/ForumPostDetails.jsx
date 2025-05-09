@@ -170,18 +170,18 @@ function ForumPostDetails() {
             <div className="mt-4 flex items-center space-x-4">
               <div className="flex items-center">
                 <UserCircleIcon className="h-5 w-5 text-gray-400 mr-1" />
-                <span className="text-sm text-gray-500">{post.author}</span>
+                <span className="text-sm text-gray-500">{post.authorUsername || 'Unknown User'}</span>
               </div>
               <div className="flex items-center">
                 <CalendarIcon className="h-5 w-5 text-gray-400 mr-1" />
                 <span className="text-sm text-gray-500">
-                  {new Date(post.createdAt).toLocaleDateString()}
+                  {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'Unknown Date'}
                 </span>
               </div>
               <div className="flex items-center">
                 <ClockIcon className="h-5 w-5 text-gray-400 mr-1" />
                 <span className="text-sm text-gray-500">
-                  {new Date(post.createdAt).toLocaleTimeString()}
+                  {post.createdAt ? new Date(post.createdAt).toLocaleTimeString() : ''}
                 </span>
               </div>
             </div>
