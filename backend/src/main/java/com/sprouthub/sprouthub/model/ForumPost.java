@@ -14,6 +14,7 @@ public class ForumPost {
     private String id;
     private String title;
     private String content;
+    private String category;
     private Date createdAt;
     private String userId; // This is the user who created the post
 }
