@@ -8,10 +8,24 @@ const EditForumPost = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
-    content: ''
+    content: '',
+    category: ''
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  const categories = [
+    'General Discussion',
+    'Plant Care',
+    'Garden Design',
+    'Pest Control',
+    'Harvesting',
+    'Tools & Equipment',
+    'Organic Gardening',
+    'Indoor Plants',
+    'Outdoor Plants',
+    'Seasonal Gardening'
+  ];
 
   useEffect(() => {
     fetchPost();
@@ -22,7 +36,8 @@ const EditForumPost = () => {
       const response = await forumService.getForumPostById(id);
       setFormData({
         title: response.data.title,
-        content: response.data.content
+        content: response.data.content,
+        category: response.data.category || ''
       });
     } catch (error) {
       console.error('Error fetching post:', error);
@@ -51,6 +66,11 @@ const EditForumPost = () => {
 
     if (!formData.content.trim()) {
       toast.error('Please enter content');
+      return;
+    }
+
+    if (!formData.category) {
+      toast.error('Please select a category');
       return;
     }
 
@@ -101,6 +121,30 @@ const EditForumPost = () => {
               placeholder="Enter your post title"
               required
             />
+          </div>
+
+          <div>
+            <label
+              htmlFor="category"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Category
+            </label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              required
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>

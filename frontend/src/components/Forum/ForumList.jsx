@@ -26,11 +26,16 @@ const ForumList = () => {
 
   const categories = [
     { id: 'all', name: 'All Topics', icon: '🌱' },
-    { id: 'organic', name: 'Organic Farming', icon: '🌿' },
-    { id: 'gardening', name: 'Gardening', icon: '🌺' },
-    { id: 'technology', name: 'Agri Tech', icon: '💻' },
-    { id: 'market', name: 'Market', icon: '💰' },
-    { id: 'general', name: 'General', icon: '💬' }
+    { id: 'General Discussion', name: 'General Discussion', icon: '💬' },
+    { id: 'Plant Care', name: 'Plant Care', icon: '🌿' },
+    { id: 'Garden Design', name: 'Garden Design', icon: '🎨' },
+    { id: 'Pest Control', name: 'Pest Control', icon: '🐛' },
+    { id: 'Harvesting', name: 'Harvesting', icon: '🌾' },
+    { id: 'Tools & Equipment', name: 'Tools & Equipment', icon: '🛠️' },
+    { id: 'Organic Gardening', name: 'Organic Gardening', icon: '🌱' },
+    { id: 'Indoor Plants', name: 'Indoor Plants', icon: '🏠' },
+    { id: 'Outdoor Plants', name: 'Outdoor Plants', icon: '🌳' },
+    { id: 'Seasonal Gardening', name: 'Seasonal Gardening', icon: '🌤️' }
   ];
 
   useEffect(() => {
@@ -42,7 +47,29 @@ const ForumList = () => {
   const fetchPosts = async () => {
     try {
       const response = await forumService.getAllForumPosts();
-      setPosts(response.data);
+      let filteredPosts = response.data;
+      
+      // Filter by category if not 'all'
+      if (selectedCategory !== 'all') {
+        filteredPosts = filteredPosts.filter(post => post.category === selectedCategory);
+      }
+      
+      // Sort posts
+      switch (sortBy) {
+        case 'recent':
+          filteredPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          break;
+        case 'popular':
+          filteredPosts.sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0));
+          break;
+        case 'comments':
+          filteredPosts.sort((a, b) => (b.commentCount || 0) - (a.commentCount || 0));
+          break;
+        default:
+          break;
+      }
+      
+      setPosts(filteredPosts);
     } catch (error) {
       console.error('Error fetching posts:', error);
       toast.error('Error fetching posts');
@@ -129,7 +156,7 @@ const ForumList = () => {
             }`}
           >
             <span className="text-2xl">{category.icon}</span>
-            <span className="font-medium text-sm">{category.name}</span>
+            <span className="font-medium text-sm text-center">{category.name}</span>
           </button>
         ))}
       </div>
