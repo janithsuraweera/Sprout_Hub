@@ -43,7 +43,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                .requestMatchers("/api/admin/**", "/api/users/**").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/users/**").authenticated()
                 .requestMatchers("/api/user/**").hasRole("USER")
                 .requestMatchers("/api/marketplace/**").permitAll()
                 .requestMatchers("/api/tutorials/**").permitAll()

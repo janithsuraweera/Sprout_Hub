@@ -11,7 +11,7 @@ import authService from '../../services/authService';
 
 const LoginForm = ({ darkMode }) => {
   const [formData, setFormData] = useState({
-    username: '',
+    usernameOrEmail: '',
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +33,7 @@ const LoginForm = ({ darkMode }) => {
     setLoading(true);
 
     try {
-      const response = await authService.login(formData.username, formData.password);
+      const response = await authService.login(formData.usernameOrEmail, formData.password);
       if (response.token) {
         // Redirect based on user role
         if (response.role === 'ROLE_ADMIN') {
@@ -82,24 +82,24 @@ const LoginForm = ({ darkMode }) => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm space-y-4">
             <div>
-              <label htmlFor="username" className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
-                Username
+              <label htmlFor="usernameOrEmail" className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
+                Username or Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <UserCircleIcon className={`h-5 w-5 ${darkMode ? 'text-gray-400' : 'text-gray-400'}`} />
                 </div>
                 <input
-                  id="username"
-                  name="username"
+                  id="usernameOrEmail"
+                  name="usernameOrEmail"
                   type="text"
                   autoComplete="username"
                   required
-                  value={formData.username}
+                  value={formData.usernameOrEmail}
                   onChange={handleChange}
                   className={`appearance-none rounded-lg relative block w-full px-3 py-3 pl-10 border ${darkMode ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500'} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
-                  placeholder="Enter your username"
-                  aria-label="Username"
+                  placeholder="Enter your username or email"
+                  aria-label="Username or Email"
                 />
               </div>
             </div>

@@ -30,6 +30,7 @@ import ResetPassword from './components/ResetPassword';
 import ForgotPassword from './components/ForgotPassword';
 import PrivateRoute from './components/auth/PrivateRoute';
 import authService from './services/authService';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 function App() {
@@ -260,7 +261,13 @@ function App() {
   );
 }
 
-export default App;
+export default function AppWrapper() {
+  return (
+    <GoogleOAuthProvider clientId="6966350581-clhvohqd0500g25ohe3n2o03bmkho9ra.apps.googleusercontent.com">
+      <App />
+    </GoogleOAuthProvider>
+  );
+}
 
 
 

@@ -48,14 +48,14 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         try {
-            if (credentials.get("username") == null || credentials.get("password") == null) {
-                return ResponseEntity.badRequest().body("Username and password are required");
+            if (credentials.get("usernameOrEmail") == null || credentials.get("password") == null) {
+                return ResponseEntity.badRequest().body("Username/Email and password are required");
             }
 
-            logger.debug("Attempting login for user: {}", credentials.get("username"));
+            logger.debug("Attempting login for user: {}", credentials.get("usernameOrEmail"));
 
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(credentials.get("username"), credentials.get("password"))
+                    new UsernamePasswordAuthenticationToken(credentials.get("usernameOrEmail"), credentials.get("password"))
             );
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -78,7 +78,7 @@ public class UserController {
         } catch (Exception e) {
             logger.error("Login failed: {}", e.getMessage());
             if (e.getMessage().contains("Bad credentials")) {
-                return ResponseEntity.badRequest().body("Invalid username or password");
+                return ResponseEntity.badRequest().body("Invalid username/email or password");
             }
             return ResponseEntity.badRequest().body("Authentication failed: " + e.getMessage());
         }

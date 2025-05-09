@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:8082/api/auth/';
 
-const login = async (username, password) => {
+const login = async (usernameOrEmail, password) => {
   const response = await axios.post(API_URL + 'login', {
-    username,
+    usernameOrEmail,
     password,
   });
   if (response.data.token) {

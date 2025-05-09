@@ -5,6 +5,7 @@ function UserManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     userService
@@ -19,6 +20,12 @@ function UserManagement() {
       });
   }, []);
 
+  const filteredUsers = users.filter(
+    (user) =>
+      user.username.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase())
+  );
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -30,6 +37,15 @@ function UserManagement() {
   return (
     <div>
       <h2>User Management</h2>
+      <div style={{ marginBottom: '1rem' }}>
+        <input
+          type="text"
+          placeholder="Search by username or email..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ padding: '0.5rem', width: '100%', maxWidth: 300, borderRadius: 6, border: '1px solid #ccc' }}
+        />
+      </div>
       <table>
         <thead>
           <tr>
@@ -39,7 +55,7 @@ function UserManagement() {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
+          {filteredUsers.map((user) => (
             <tr key={user.id}>
               <td>{user.username}</td>
               <td>{user.email}</td>

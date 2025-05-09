@@ -1,12 +1,96 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
+import userService from '../../services/userService';
 
 function HomePage() {
   const user = authService.getCurrentUser();
+  const [search, setSearch] = useState('');
+  const [userResults, setUserResults] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Only fetch users if the user is logged in
+    if (user) {
+      userService.getAllUsers()
+        .then(res => {
+          if (res.data) {
+            setAllUsers(res.data);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching users:', error);
+          // The error will be handled by the API interceptor
+          setAllUsers([]);
+        });
+    } else {
+      setAllUsers([]);
+    }
+  }, [user]);
+
+  // Live filter as user types
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    if (value.trim() === '') {
+      setUserResults([]);
+      return;
+    }
+    const results = allUsers.filter(
+      u =>
+        u.username.toLowerCase().includes(value.toLowerCase()) ||
+        u.email.toLowerCase().includes(value.toLowerCase())
+    );
+    setUserResults(results);
+  };
+
+  const handleUserClick = (username) => {
+    setSearch('');
+    setUserResults([]);
+    navigate(`/profile/${username}`);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      {/* Search Bar for logged-in users */}
+      {user && (
+        <div className="max-w-2xl mx-auto pt-8 pb-4">
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              className="flex-1 px-4 py-2 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Search users by username or email..."
+              value={search}
+              onChange={handleInputChange}
+            />
+            <button
+              type="button"
+              className="px-4 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 transition-colors duration-200"
+              disabled
+            >
+              Search
+            </button>
+          </div>
+          {/* Show user search results */}
+          {userResults.length > 0 && (
+            <div className="bg-white border border-gray-200 rounded-lg mt-2 shadow">
+              <ul>
+                {userResults.map(u => (
+                  <li
+                    key={u.id}
+                    className="px-4 py-2 hover:bg-blue-50 cursor-pointer"
+                    onClick={() => handleUserClick(u.username)}
+                  >
+                    <span className="font-semibold text-blue-700">{u.username}</span>
+                    <span className="ml-2 text-gray-500 text-sm">{u.email}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
