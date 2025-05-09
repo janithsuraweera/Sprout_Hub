@@ -237,7 +237,7 @@ const ForumList = () => {
                   <div className="flex items-center gap-2">
                     <UserCircleIcon className="h-8 w-8 text-gray-400" />
                     <span className="text-sm font-medium text-gray-700">
-                      {post.author?.username || 'Unknown User'}
+                      {post.authorUsername ? post.authorUsername : 'Anonymous User'}
                     </span>
                   </div>
                 </div>
