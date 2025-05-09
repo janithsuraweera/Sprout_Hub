@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import authService from '../../services/authService';
+import userService from '../../services/userService';
 import { 
   UserCircleIcon, 
   EnvelopeIcon, 
@@ -31,6 +32,7 @@ function Profile() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [showPassword, setShowPassword] = useState(false);
+  const [isOwnProfile, setIsOwnProfile] = useState(true);
   const [notifications, setNotifications] = useState({
     email: true,
     push: true,
@@ -65,17 +67,38 @@ function Profile() {
     }
   ]);
   const navigate = useNavigate();
+  const { username } = useParams();
 
   useEffect(() => {
-    const currentUser = authService.getCurrentUser();
-    if (!currentUser) {
-      navigate('/login');
-      return;
-    }
-    setUser(currentUser);
-    setEditedUser(currentUser);
-    setLoading(false);
-  }, [navigate]);
+    const fetchUserData = async () => {
+      try {
+        const currentUser = authService.getCurrentUser();
+        if (!currentUser) {
+          navigate('/login');
+          return;
+        }
+
+        if (username) {
+          // Fetch other user's profile
+          const response = await userService.getUserByUsername(username);
+          setUser(response.data);
+          setEditedUser(response.data);
+          setIsOwnProfile(currentUser.username === username);
+        } else {
+          // Show current user's profile
+          setUser(currentUser);
+          setEditedUser(currentUser);
+          setIsOwnProfile(true);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        navigate('/');
+      }
+    };
+
+    fetchUserData();
+  }, [navigate, username]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -161,13 +184,15 @@ function Profile() {
           <div className="relative group">
             <div className="bg-white p-2 rounded-full shadow-lg transform transition-all duration-300 group-hover:scale-105">
               <UserCircleIcon className="h-32 w-32 text-blue-500" />
-              <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full cursor-pointer transform transition-all duration-300 hover:bg-blue-600">
-                <PhotoIcon className="h-6 w-6" />
-              </div>
+              {isOwnProfile && (
+                <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full cursor-pointer transform transition-all duration-300 hover:bg-blue-600">
+                  <PhotoIcon className="h-6 w-6" />
+                </div>
+              )}
             </div>
           </div>
           <div className="flex-grow text-center md:text-left">
-            {isEditing ? (
+            {isEditing && isOwnProfile ? (
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-white mb-1">Username</label>
@@ -227,6 +252,24 @@ function Profile() {
                     </div>
                   )}
                 </div>
+                {isOwnProfile && (
+                  <div className="mt-6 flex space-x-4">
+                    <button
+                      onClick={handleEdit}
+                      className="inline-flex items-center px-6 py-3 border-2 border-white text-white rounded-lg hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105"
+                    >
+                      <PencilSquareIcon className="h-5 w-5 mr-2" />
+                      Edit Profile
+                    </button>
+                    <button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="inline-flex items-center px-6 py-3 border-2 border-red-500 text-white rounded-lg hover:bg-red-500 transition-all duration-300 transform hover:scale-105"
+                    >
+                      <TrashIcon className="h-5 w-5 mr-2" />
+                      Delete Account
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -275,24 +318,6 @@ function Profile() {
           <>
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl font-bold text-gray-800">Profile Overview</h2>
-              {!isEditing && (
-                <div className="flex space-x-4">
-                  <button
-                    onClick={handleEdit}
-                    className="flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-105"
-                  >
-                    <PencilSquareIcon className="h-5 w-5 mr-2" />
-                    Edit Profile
-                  </button>
-                  <button
-                    onClick={() => setShowDeleteConfirm(true)}
-                    className="flex items-center px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-105"
-                  >
-                    <TrashIcon className="h-5 w-5 mr-2" />
-                    Delete Account
-                  </button>
-                </div>
-              )}
             </div>
 
             {/* Stats Grid */}

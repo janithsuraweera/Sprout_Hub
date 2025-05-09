@@ -37,11 +37,12 @@ function HomePage() {
       setUserResults([]);
       return;
     }
-    const results = allUsers.filter(
-      u =>
-        u.username.toLowerCase().includes(value.toLowerCase()) ||
-        u.email.toLowerCase().includes(value.toLowerCase())
-    );
+    const results = allUsers.filter(u => {
+      const username = u?.username?.toLowerCase() || '';
+      const email = u?.email?.toLowerCase() || '';
+      const searchValue = value.toLowerCase();
+      return username.includes(searchValue) || email.includes(searchValue);
+    });
     setUserResults(results);
   };
 
