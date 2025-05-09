@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
 import userService from '../../services/userService';
+import forumService from '../../services/forumService';
 import { 
   UserGroupIcon, 
   BookOpenIcon, 
@@ -58,11 +59,28 @@ function HomePage() {
     }
   }, []);
 
+  const fetchForumCount = useCallback(async () => {
+    if (!mounted.current) return;
+
+    try {
+      const res = await forumService.getAllForumPosts();
+      if (res.data && mounted.current) {
+        setStats(prev => ({ ...prev, forumCount: res.data.length }));
+      }
+    } catch (error) {
+      console.error('Error fetching forum count:', error);
+      if (mounted.current) {
+        setStats(prev => ({ ...prev, forumCount: 0 }));
+      }
+    }
+  }, []);
+
   useEffect(() => {
     mounted.current = true;
 
     if (user) {
       fetchUsers();
+      fetchForumCount();
     } else {
       setAllUsers([]);
     }
@@ -73,7 +91,7 @@ function HomePage() {
         controllerRef.current.abort();
       }
     };
-  }, [user, fetchUsers]);
+  }, [user, fetchUsers, fetchForumCount]);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
