@@ -40,5 +40,4 @@ public class TutorialController {
         tutorialService.deleteTutorial(id);
         return ResponseEntity.ok().build();
     }
-
 }
