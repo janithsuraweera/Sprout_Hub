@@ -31,11 +31,16 @@ public class ForumServiceImpl implements ForumService {
 
     @Override
     public ForumPost updateForumPost(String id, ForumPost forumPost) {
-        if (!forumPostRepository.existsById(id)) {
-            throw new ForumNotFoundException("Forum post not found with id: " + id);
-        }
-        forumPost.setId(id);
-        return forumPostRepository.save(forumPost);
+        ForumPost existingPost = forumPostRepository.findById(id)
+            .orElseThrow(() -> new ForumNotFoundException("Forum post not found with id: " + id));
+
+        // Only update allowed fields
+        existingPost.setTitle(forumPost.getTitle());
+        existingPost.setContent(forumPost.getContent());
+        existingPost.setCategory(forumPost.getCategory());
+        // No tags field to update
+
+        return forumPostRepository.save(existingPost);
     }
 
     @Override
