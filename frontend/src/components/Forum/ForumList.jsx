@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import forumService from '../../services/forumService';
 import authService from '../../services/authService';
@@ -27,6 +27,7 @@ const ForumList = () => {
   const [likeModalPost, setLikeModalPost] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
+  const navigate = useNavigate();
 
   const categories = [
     { id: 'all', name: 'All Topics', icon: '🌱' },
@@ -44,9 +45,14 @@ const ForumList = () => {
 
   useEffect(() => {
     const user = authService.getCurrentUser();
+    if (!user) {
+      toast.error('Please login to view forum posts');
+      navigate('/login');
+      return;
+    }
     setCurrentUser(user);
     fetchPosts();
-  }, [selectedCategory, sortBy]);
+  }, [selectedCategory, sortBy, navigate]);
 
   useEffect(() => {
     if (likeModalPost && allUsers.length === 0) {
@@ -59,6 +65,7 @@ const ForumList = () => {
 
   const fetchPosts = async () => {
     try {
+      setLoading(true);
       const response = await forumService.getAllForumPosts();
       let filteredPosts = response.data;
       
@@ -84,22 +91,46 @@ const ForumList = () => {
       
       setPosts(filteredPosts);
     } catch (error) {
-      console.error('Error fetching posts:', error);
-      toast.error('Error fetching posts');
+      if (error.response?.status === 401) {
+        toast.error('Please login to view forum posts');
+        navigate('/login');
+      } else {
+        toast.error('Error fetching posts');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
+    // Check if user is logged in
+    if (!currentUser) {
+      toast.error('Please login to delete posts');
+      navigate('/login');
+      return;
+    }
+
+    // Check if user is the post owner
+    const post = posts.find(p => p.id === id);
+    if (!post || post.authorUsername !== currentUser.username) {
+      toast.error('You can only delete your own posts');
+      return;
+    }
+
     if (window.confirm('Are you sure you want to delete this post?')) {
       try {
         await forumService.deleteForumPost(id);
         toast.success('Post deleted successfully');
         fetchPosts();
       } catch (error) {
-        console.error('Error deleting post:', error);
-        toast.error('Error deleting post');
+        if (error.response?.status === 401) {
+          toast.error('Please login to delete posts');
+          navigate('/login');
+        } else if (error.response?.status === 403) {
+          toast.error('You can only delete your own posts');
+        } else {
+          toast.error('Error deleting post');
+        }
       }
     }
   };
@@ -116,6 +147,12 @@ const ForumList = () => {
   };
 
   const handleLike = async (postId, liked) => {
+    if (!currentUser) {
+      toast.error('Please login to like posts');
+      navigate('/login');
+      return;
+    }
+
     try {
       let updatedPost;
       if (liked) {
@@ -129,7 +166,12 @@ const ForumList = () => {
         prevPosts.map((p) => (p.id === postId ? { ...p, likes: updatedPost.likes, likedUsers: updatedPost.likedUsers } : p))
       );
     } catch (error) {
-      toast.error('Failed to update like status');
+      if (error.response?.status === 401) {
+        toast.error('Please login to like posts');
+        navigate('/login');
+      } else {
+        toast.error('Failed to update like status');
+      }
     }
   };
 
@@ -293,7 +335,7 @@ const ForumList = () => {
                 >
                   Read More
                 </Link>
-                {currentUser && (currentUser.id === post.author?.id || currentUser.role === 'ADMIN') && (
+                {currentUser && currentUser.username === post.authorUsername && (
                   <>
                     <Link
                       to={`/forum/edit/${post.id}`}
