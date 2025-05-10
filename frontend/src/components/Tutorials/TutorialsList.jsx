@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import tutorialService from '../../services/tutorialService';
 import authService from '../../services/authService';
 import TutorialCard from './TutorialCard';
-import { FaThLarge, FaList, FaUser, FaClock, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaThLarge, FaList, FaUser, FaClock, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
 
 function TutorialsList() {
   const [tutorials, setTutorials] = useState([]);
+  const [filteredTutorials, setFilteredTutorials] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
@@ -17,6 +19,7 @@ function TutorialsList() {
     try {
       const response = await tutorialService.getAllTutorials();
       setTutorials(response.data);
+      setFilteredTutorials(response.data);
       setLoading(false);
     } catch (err) {
       setError(err.message);
@@ -27,6 +30,15 @@ function TutorialsList() {
   useEffect(() => {
     fetchTutorials();
   }, []);
+
+  useEffect(() => {
+    const filtered = tutorials.filter(tutorial => 
+      tutorial.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tutorial.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (tutorial.author && tutorial.author.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+    setFilteredTutorials(filtered);
+  }, [searchQuery, tutorials]);
 
   const handleDelete = (tutorialId) => {
     setTutorials(tutorials.filter(tutorial => tutorial.id !== tutorialId));
@@ -59,6 +71,16 @@ function TutorialsList() {
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-3xl font-bold text-gray-800">Tutorials</h2>
         <div className="flex items-center space-x-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search tutorials..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          </div>
           <div className="flex items-center space-x-2 bg-gray-100 p-1 rounded-lg">
             <button
               onClick={() => setViewMode('grid')}
@@ -90,10 +112,12 @@ function TutorialsList() {
         </div>
       </div>
 
-      {tutorials.length === 0 ? (
+      {filteredTutorials.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">No tutorials available yet.</p>
-          {user && (
+          <p className="text-gray-500 text-lg">
+            {searchQuery ? 'No tutorials found matching your search.' : 'No tutorials available yet.'}
+          </p>
+          {user && !searchQuery && (
             <Link
               to="/tutorials/create"
               className="inline-block mt-4 text-blue-500 hover:text-blue-600"
@@ -104,7 +128,7 @@ function TutorialsList() {
         </div>
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {tutorials.map((tutorial) => (
+          {filteredTutorials.map((tutorial) => (
             <TutorialCard
               key={tutorial.id}
               tutorial={tutorial}
@@ -114,7 +138,7 @@ function TutorialsList() {
         </div>
       ) : (
         <div className="space-y-4">
-          {tutorials.map((tutorial) => (
+          {filteredTutorials.map((tutorial) => (
             <div
               key={tutorial.id}
               className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200"

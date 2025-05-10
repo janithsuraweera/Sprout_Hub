@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaPlay, FaClock, FaUser, FaEdit, FaTrash } from 'react-icons/fa';
 import mangoImage from '../../assets/images/mango.jpg';
@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 
 function TutorialCard({ tutorial, onDelete }) {
   const navigate = useNavigate();
+  const [isHovering, setIsHovering] = useState(false);
+  const videoRef = useRef(null);
 
   // Function to get video thumbnail from YouTube URL
   const getThumbnailUrl = (videoUrl) => {
@@ -27,6 +29,23 @@ function TutorialCard({ tutorial, onDelete }) {
     }
     
     return mangoImage;
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.log('Autoplay prevented:', error);
+      });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
   };
 
   const handleDelete = async (e) => {
@@ -53,21 +72,56 @@ function TutorialCard({ tutorial, onDelete }) {
     navigate(`/tutorials/edit/${tutorial.id}`);
   };
 
+  const getEmbedUrl = (videoUrl) => {
+    if (!videoUrl) return null;
+    
+    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+      const videoId = videoUrl.includes('youtube.com')
+        ? videoUrl.split('v=')[1]?.split('&')[0]
+        : videoUrl.split('be/')[1];
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0`;
+    }
+    
+    if (videoUrl.includes('vimeo.com')) {
+      const videoId = videoUrl.split('vimeo.com/')[1];
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1&mute=1&controls=0&title=0&byline=0&portrait=0`;
+    }
+    
+    return null;
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <div className="relative">
-        <img
-          src={getThumbnailUrl(tutorial.videoUrl)}
-          alt={tutorial.title}
-          className="w-full h-48 object-cover"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = mangoImage;
-          }}
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-          <FaPlay className="text-white text-4xl" />
-        </div>
+      <div 
+        className="relative h-48"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {isHovering && tutorial.videoUrl ? (
+          <iframe
+            ref={videoRef}
+            src={getEmbedUrl(tutorial.videoUrl)}
+            className="absolute inset-0 w-full h-full"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <>
+            <img
+              src={getThumbnailUrl(tutorial.videoUrl)}
+              alt={tutorial.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = mangoImage;
+              }}
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+              <FaPlay className="text-white text-4xl" />
+            </div>
+          </>
+        )}
       </div>
       
       <div className="p-4">
