@@ -20,12 +20,17 @@ const deleteForumPost = (id) => {
   return api.delete(`/forum/${id}`);
 };
 
+const likePost = (id) => api.post(`/forum/${id}/like`);
+const unlikePost = (id) => api.post(`/forum/${id}/unlike`);
+
 const forumService = {
   getAllForumPosts,
   getForumPostById,
   createForumPost,
   updateForumPost,
   deleteForumPost,
+  likePost,
+  unlikePost,
 };
 
 export default forumService;
