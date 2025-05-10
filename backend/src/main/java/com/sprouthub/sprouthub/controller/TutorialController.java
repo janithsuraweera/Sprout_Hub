@@ -25,4 +25,20 @@ public class TutorialController {
         return ResponseEntity.ok(tutorialService.getTutorialById(id));
     }
 
+    @GetMapping
+    public ResponseEntity<List<Tutorial>> getAllTutorials() {
+        return ResponseEntity.ok(tutorialService.getAllTutorials());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Tutorial> updateTutorial(@PathVariable String id, @RequestBody Tutorial tutorial) {
+        return ResponseEntity.ok(tutorialService.updateTutorial(id, tutorial));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTutorial(@PathVariable String id) {
+        tutorialService.deleteTutorial(id);
+        return ResponseEntity.ok().build();
+    }
+
 }
