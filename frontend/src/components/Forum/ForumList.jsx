@@ -27,6 +27,7 @@ const ForumList = () => {
   const [likeModalPost, setLikeModalPost] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
+  const [userFilter, setUserFilter] = useState('all'); // 'all' or 'my'
   const navigate = useNavigate();
 
   const categories = [
@@ -69,9 +70,23 @@ const ForumList = () => {
       const response = await forumService.getAllForumPosts();
       let filteredPosts = response.data;
       
+      // Filter by user if 'my' is selected
+      if (userFilter === 'my' && currentUser) {
+        filteredPosts = filteredPosts.filter(post => post.authorUsername === currentUser.username);
+      }
+      
       // Filter by category if not 'all'
       if (selectedCategory !== 'all') {
         filteredPosts = filteredPosts.filter(post => post.category === selectedCategory);
+      }
+
+      // Filter by search query if exists
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        filteredPosts = filteredPosts.filter(post => 
+          post.title.toLowerCase().includes(query) || 
+          post.content.toLowerCase().includes(query)
+        );
       }
       
       // Sort posts
@@ -101,6 +116,11 @@ const ForumList = () => {
       setLoading(false);
     }
   };
+
+  // Add useEffect to refetch posts when userFilter changes
+  useEffect(() => {
+    fetchPosts();
+  }, [userFilter, selectedCategory, sortBy, searchQuery]);
 
   const handleDelete = async (id) => {
     // Check if user is logged in
@@ -215,6 +235,34 @@ const ForumList = () => {
           </div>
         </div>
       </div>
+
+      {/* User Filter Section */}
+      {currentUser && (
+        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setUserFilter('all')}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                userFilter === 'all'
+                  ? 'bg-green-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              All Topics
+            </button>
+            <button
+              onClick={() => setUserFilter('my')}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                userFilter === 'my'
+                  ? 'bg-green-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              My Topics
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Categories Section */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
