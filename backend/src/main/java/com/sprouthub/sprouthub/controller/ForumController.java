@@ -2,6 +2,7 @@ package com.sprouthub.sprouthub.controller;
 
 import com.sprouthub.sprouthub.model.ForumPost;
 import com.sprouthub.sprouthub.model.User;
+import com.sprouthub.sprouthub.model.Comment;
 import com.sprouthub.sprouthub.repository.UserRepository;
 import com.sprouthub.sprouthub.security.JwtUtil;
 import com.sprouthub.sprouthub.service.ForumService;
@@ -51,6 +52,8 @@ public class ForumController {
         public String authorUsername;
         public List<String> likedUsers;
         public int likes;
+        public int commentCount;
+        public List<Comment> comments;
 
         public ForumPostDTO(ForumPost post, String authorUsername) {
             this.id = post.getId();
@@ -62,6 +65,8 @@ public class ForumController {
             this.authorUsername = authorUsername;
             this.likedUsers = post.getLikedUsers();
             this.likes = post.getLikedUsers() != null ? post.getLikedUsers().size() : 0;
+            this.commentCount = post.getComments() != null ? post.getComments().size() : 0;
+            this.comments = post.getComments();
         }
     }
 
@@ -141,5 +146,75 @@ public class ForumController {
             if (author != null) authorUsername = author.getUsername();
         }
         return ResponseEntity.ok(new ForumPostDTO(post, authorUsername));
+    }
+
+    @PostMapping("/{postId}/comments")
+    public ResponseEntity<Comment> addComment(@PathVariable String postId, @RequestBody Comment comment, @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            String username = jwtUtil.extractUsername(token);
+            User user = userRepository.findByUsername(username).orElse(null);
+            if (user != null) {
+                comment.setAuthor(user.getUsername());
+                comment.setAuthorId(user.getId());
+            }
+        }
+        Comment created = forumService.addComment(postId, comment);
+        return ResponseEntity.ok(created);
+    }
+
+    @PutMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<Comment> updateComment(@PathVariable String postId, @PathVariable String commentId, @RequestBody Comment comment, @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).build();
+        }
+        String token = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+        ForumPost post = forumService.getForumPostById(postId);
+        Comment existingComment = post.getComments().stream()
+            .filter(c -> c.getId().equals(commentId))
+            .findFirst()
+            .orElse(null);
+        if (existingComment == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (!user.getId().equals(existingComment.getAuthorId())) {
+            return ResponseEntity.status(403).build();
+        }
+        comment.setAuthor(user.getUsername());
+        comment.setAuthorId(user.getId());
+        Comment updated = forumService.updateComment(postId, commentId, comment);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable String postId, @PathVariable String commentId, @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).build();
+        }
+        String token = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+        ForumPost post = forumService.getForumPostById(postId);
+        Comment existingComment = post.getComments().stream()
+            .filter(c -> c.getId().equals(commentId))
+            .findFirst()
+            .orElse(null);
+        if (existingComment == null) {
+            return ResponseEntity.notFound().build();
+        }
+        boolean isAuthor = user.getId().equals(existingComment.getAuthorId());
+        if (!isAuthor) {
+            return ResponseEntity.status(403).build();
+        }
+        forumService.deleteComment(postId, commentId);
+        return ResponseEntity.ok().build();
     }
 }

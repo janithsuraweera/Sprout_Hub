@@ -17,4 +17,5 @@ public class Tutorial {
     private String videoUrl;
     private Date createdAt;
     private String userId; // This is the user who created the tutorial
+    private String author; // Username of the tutorial creator
 }

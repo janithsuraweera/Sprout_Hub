@@ -24,6 +24,8 @@ function ForumPostDetails() {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [likedUsers, setLikedUsers] = useState([]);
+  const [editingComment, setEditingComment] = useState(null);
+  const [editCommentText, setEditCommentText] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
   const user = authService.getCurrentUser();
@@ -45,8 +47,10 @@ function ForumPostDetails() {
       }
     };
 
-    fetchPost();
-  }, [id, user]);
+    if (user) {
+      fetchPost();
+    }
+  }, [id]);
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this post?')) {
@@ -97,25 +101,88 @@ function ForumPostDetails() {
     }
 
     try {
-      const response = await forumService.addComment(id, { content: comment });
+      const response = await forumService.addComment(id, { 
+        content: comment,
+        author: user.username,
+        authorId: user.id
+      });
       setPost(prev => ({
         ...prev,
-        comments: [...prev.comments, response.data]
+        comments: [...(prev.comments || []), response.data]
       }));
       setComment('');
+      toast.success('Comment added successfully');
     } catch (err) {
       if (err.response?.status === 401) {
         navigate('/login');
       } else {
+        toast.error(err.response?.data?.message || 'Failed to add comment');
         setError('Failed to add comment');
+      }
+    }
+  };
+
+  const handleEditComment = async (commentId) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const response = await forumService.updateComment(id, commentId, {
+        content: editCommentText,
+        author: user.username,
+        authorId: user.id
+      });
+      
+      setPost(prev => ({
+        ...prev,
+        comments: prev.comments.map(comment => 
+          comment.id === commentId ? response.data : comment
+        )
+      }));
+      
+      setEditingComment(null);
+      setEditCommentText('');
+      toast.success('Comment updated successfully');
+    } catch (err) {
+      if (err.response?.status === 401) {
+        navigate('/login');
+      } else {
+        setError('Failed to update comment');
+      }
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    if (window.confirm('Are you sure you want to delete this comment?')) {
+      try {
+        await forumService.deleteComment(id, commentId);
+        setPost(prev => ({
+          ...prev,
+          comments: prev.comments.filter(comment => comment.id !== commentId)
+        }));
+        toast.success('Comment deleted successfully');
+      } catch (err) {
+        if (err.response?.status === 401) {
+          navigate('/login');
+        } else {
+          setError('Failed to delete comment');
+        }
       }
     }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex flex-col items-center justify-center min-h-[40vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+        <div className="mt-4 text-blue-500 font-semibold text-lg">Loading post...</div>
       </div>
     );
   }
@@ -128,8 +195,12 @@ function ForumPostDetails() {
     );
   }
 
-  if (!post) {
-    return null;
+  if (!post && !loading && !error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-500">Post not found.</p>
+      </div>
+    );
   }
 
   return (
@@ -255,9 +326,58 @@ function ForumPostDetails() {
                 <div className="space-y-4">
                   {post.comments.map((comment) => (
                     <div key={comment.id} className="bg-gray-50 p-4 rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <UserCircleIcon className="h-5 w-5 text-gray-400" />
-                        <span className="text-sm font-medium text-gray-900">{comment.author}</span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <UserCircleIcon className="h-5 w-5 text-gray-400" />
+                          <span className="text-sm font-medium text-gray-900">{comment.author}</span>
+                        </div>
+                        {user && user.id === comment.authorId && (
+                          <div className="flex space-x-2">
+                            {editingComment === comment.id ? (
+                              <>
+                                <textarea
+                                  value={editCommentText}
+                                  onChange={(e) => setEditCommentText(e.target.value)}
+                                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                  rows={2}
+                                />
+                                <button
+                                  onClick={() => handleEditComment(comment.id)}
+                                  className="text-blue-600 hover:text-blue-700"
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setEditingComment(null);
+                                    setEditCommentText('');
+                                  }}
+                                  className="text-gray-600 hover:text-gray-700"
+                                >
+                                  Cancel
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  onClick={() => {
+                                    setEditingComment(comment.id);
+                                    setEditCommentText(comment.content);
+                                  }}
+                                  className="text-blue-600 hover:text-blue-700"
+                                >
+                                  <PencilIcon className="h-4 w-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteComment(comment.id)}
+                                  className="text-red-600 hover:text-red-700"
+                                >
+                                  <TrashIcon className="h-4 w-4" />
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        )}
                       </div>
                       <p className="mt-2 text-gray-600">{comment.content}</p>
                       <div className="mt-2 text-sm text-gray-500">
