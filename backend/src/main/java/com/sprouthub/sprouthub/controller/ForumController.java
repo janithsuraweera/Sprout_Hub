@@ -52,6 +52,7 @@ public class ForumController {
         public String authorUsername;
         public List<String> likedUsers;
         public int likes;
+        public List<Comment> comments;
 
         public ForumPostDTO(ForumPost post, String authorUsername) {
             this.id = post.getId();
@@ -63,6 +64,7 @@ public class ForumController {
             this.authorUsername = authorUsername;
             this.likedUsers = post.getLikedUsers();
             this.likes = post.getLikedUsers() != null ? post.getLikedUsers().size() : 0;
+            this.comments = post.getComments();
         }
     }
 
