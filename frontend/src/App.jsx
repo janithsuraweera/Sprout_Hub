@@ -156,7 +156,7 @@ function App() {
               path="/forum"
               element={
                 <PrivateRoute>
-                  <ForumList />
+                  <ForumList darkMode={darkMode} />
                 </PrivateRoute>
               }
             />

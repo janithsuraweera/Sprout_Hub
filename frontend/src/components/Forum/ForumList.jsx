@@ -17,7 +17,7 @@ import {
   FireIcon
 } from '@heroicons/react/24/outline';
 
-const ForumList = () => {
+const ForumList = ({ darkMode }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
@@ -197,16 +197,16 @@ const ForumList = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
+      <div className={`flex justify-center items-center min-h-[60vh] ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-gray-50 min-h-screen">
+    <div className={`min-h-screen py-8 transition-colors duration-200 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Header Section */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 transform transition-all duration-300 hover:shadow-xl">
+      <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-8 mb-8 transform transition-all duration-300 hover:shadow-xl`}>
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex-1 w-full">
             <h1 className="text-4xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">
@@ -240,7 +240,7 @@ const ForumList = () => {
 
       {/* User Filter Section */}
       {currentUser && (
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-md p-6 mb-8`}>
           <div className="flex items-center gap-4">
             <button
               onClick={() => setUserFilter('all')}
@@ -285,7 +285,7 @@ const ForumList = () => {
       </div>
 
       {/* Sort and Filter Section */}
-      <div className="bg-white rounded-xl shadow-md p-6 mb-8 flex justify-between items-center">
+      <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-md p-6 mb-8 flex justify-between items-center`}>
         <div className="flex items-center gap-4">
           <select
             value={sortBy}
@@ -307,7 +307,7 @@ const ForumList = () => {
         {posts.map((post) => (
           <div
             key={post.id}
-            className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
+            className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden`}
           >
             <div className="p-8">
               <div className="flex items-start justify-between gap-6">
@@ -324,11 +324,11 @@ const ForumList = () => {
                   </div>
                   <Link
                     to={`/forum/${post.id}`}
-                    className="text-2xl font-bold text-gray-800 hover:text-green-600 transition-colors duration-300"
+                    className={`text-2xl font-bold transition-colors duration-300 ${darkMode ? 'text-white hover:text-green-300' : 'text-gray-800 hover:text-green-600'}`}
                   >
                     {post.title}
                   </Link>
-                  <p className="text-gray-600 mt-3 line-clamp-2 text-lg">
+                  <p className={`mt-3 line-clamp-2 text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {post.content}
                   </p>
                   <div className="flex flex-wrap gap-2 mt-4">
@@ -369,7 +369,7 @@ const ForumList = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <UserCircleIcon className="h-10 w-10 text-gray-400" />
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className={`text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                       {post.authorUsername ? post.authorUsername : 'Anonymous User'}
                     </span>
                   </div>
@@ -407,10 +407,10 @@ const ForumList = () => {
         ))}
 
         {posts.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-2xl shadow-md">
+          <div className={`text-center py-16 rounded-2xl shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="text-7xl mb-6 animate-bounce">🌱</div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-3">No Topics Found</h3>
-            <p className="text-gray-600 text-lg mb-6">Be the first to start a discussion in this category!</p>
+            <h3 className={`text-2xl font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-800'}`}>No Topics Found</h3>
+            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} text-lg mb-6`}>Be the first to start a discussion in this category!</p>
             {currentUser && (
               <Link
                 to="/forum/create"
@@ -426,8 +426,8 @@ const ForumList = () => {
       {/* Like Modal */}
       {likeModalPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl p-8 w-96 transform transition-all duration-300">
-            <h3 className="text-xl font-bold text-gray-800 mb-6">Users who liked this post</h3>
+          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-xl p-8 w-96 transform transition-all duration-300`}>
+            <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-800'}`}>Users who liked this post</h3>
             <ul className="mb-6 max-h-60 overflow-y-auto">
               {usersLoading ? (
                 <li className="text-gray-500 text-center py-4">Loading...</li>
@@ -445,7 +445,7 @@ const ForumList = () => {
                           {user.username}
                         </a>
                       ) : (
-                        <span className="text-gray-400 flex items-center gap-2">
+                        <span className={`flex items-center gap-2 ${darkMode ? 'text-gray-400' : 'text-gray-400'}`}>
                           <UserCircleIcon className="h-6 w-6" />
                           Unknown User
                         </span>
