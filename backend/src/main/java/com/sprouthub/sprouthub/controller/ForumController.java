@@ -209,8 +209,7 @@ public class ForumController {
             return ResponseEntity.notFound().build();
         }
         boolean isAuthor = user.getId().equals(existingComment.getAuthorId());
-        boolean isPostOwner = user.getId().equals(post.getUserId());
-        if (!isAuthor && !isPostOwner) {
+        if (!isAuthor) {
             return ResponseEntity.status(403).build();
         }
         forumService.deleteComment(postId, commentId);

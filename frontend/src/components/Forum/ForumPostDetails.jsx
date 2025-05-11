@@ -331,7 +331,7 @@ function ForumPostDetails() {
                           <UserCircleIcon className="h-5 w-5 text-gray-400" />
                           <span className="text-sm font-medium text-gray-900">{comment.author}</span>
                         </div>
-                        {user && (user.id === comment.authorId || user.id === post.userId) && (
+                        {user && user.id === comment.authorId && (
                           <div className="flex space-x-2">
                             {editingComment === comment.id ? (
                               <>
