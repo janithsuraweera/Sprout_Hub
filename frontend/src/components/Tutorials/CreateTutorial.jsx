@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import tutorialService from '../../services/tutorialService';   
+import authService from '../../services/authService';
 
 
 function CreateTutorial() {  //keep track of what the user types into each field
@@ -12,8 +13,10 @@ function CreateTutorial() {  //keep track of what the user types into each field
 
   const handleSubmit = (e) => {
     e.preventDefault();  //refreshing when the form is submitted
+    const user = authService.getCurrentUser();
+    const author = user ? user.username : 'Unknown Author';
     tutorialService
-      .createTutorial({ title, description, videoUrl })  //Sends the form data to the backend
+      .createTutorial({ title, description, videoUrl, author })  //Sends the form data to the backend
       .then(() => {
         navigate('/tutorials');
       })
