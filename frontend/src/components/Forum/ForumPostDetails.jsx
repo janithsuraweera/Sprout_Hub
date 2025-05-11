@@ -50,7 +50,7 @@ function ForumPostDetails() {
     if (user) {
       fetchPost();
     }
-  }, [id, user]);
+  }, [id]);
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this post?')) {
@@ -178,11 +178,7 @@ function ForumPostDetails() {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <div className="text-center py-8">Loading...</div>;
   }
 
   if (error) {
@@ -193,8 +189,12 @@ function ForumPostDetails() {
     );
   }
 
-  if (!post) {
-    return null;
+  if (!post && !loading && !error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-500">Post not found.</p>
+      </div>
+    );
   }
 
   return (
