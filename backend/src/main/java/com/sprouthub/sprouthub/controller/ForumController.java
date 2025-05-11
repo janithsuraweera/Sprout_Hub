@@ -2,6 +2,7 @@ package com.sprouthub.sprouthub.controller;
 
 import com.sprouthub.sprouthub.model.ForumPost;
 import com.sprouthub.sprouthub.model.User;
+import com.sprouthub.sprouthub.model.Comment;
 import com.sprouthub.sprouthub.repository.UserRepository;
 import com.sprouthub.sprouthub.security.JwtUtil;
 import com.sprouthub.sprouthub.service.ForumService;
@@ -141,5 +142,41 @@ public class ForumController {
             if (author != null) authorUsername = author.getUsername();
         }
         return ResponseEntity.ok(new ForumPostDTO(post, authorUsername));
+    }
+
+    @PostMapping("/{postId}/comments")
+    public ResponseEntity<Comment> addComment(@PathVariable String postId, @RequestBody Comment comment, @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            String username = jwtUtil.extractUsername(token);
+            User user = userRepository.findByUsername(username).orElse(null);
+            if (user != null) {
+                comment.setAuthor(user.getUsername());
+                comment.setAuthorId(user.getId());
+            }
+        }
+        Comment created = forumService.addComment(postId, comment);
+        return ResponseEntity.ok(created);
+    }
+
+    @PutMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<Comment> updateComment(@PathVariable String postId, @PathVariable String commentId, @RequestBody Comment comment, @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            String username = jwtUtil.extractUsername(token);
+            User user = userRepository.findByUsername(username).orElse(null);
+            if (user != null) {
+                comment.setAuthor(user.getUsername());
+                comment.setAuthorId(user.getId());
+            }
+        }
+        Comment updated = forumService.updateComment(postId, commentId, comment);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable String postId, @PathVariable String commentId) {
+        forumService.deleteComment(postId, commentId);
+        return ResponseEntity.ok().build();
     }
 }

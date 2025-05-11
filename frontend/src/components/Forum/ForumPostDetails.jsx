@@ -116,6 +116,7 @@ function ForumPostDetails() {
       if (err.response?.status === 401) {
         navigate('/login');
       } else {
+        toast.error(err.response?.data?.message || 'Failed to add comment');
         setError('Failed to add comment');
       }
     }
