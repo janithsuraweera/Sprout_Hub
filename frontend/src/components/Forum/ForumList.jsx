@@ -14,7 +14,9 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
   BookmarkIcon,
-  FireIcon
+  FireIcon,
+  Squares2X2Icon,
+  Bars3Icon
 } from '@heroicons/react/24/outline';
 
 const ForumList = ({ darkMode }) => {
@@ -28,6 +30,7 @@ const ForumList = ({ darkMode }) => {
   const [allUsers, setAllUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [userFilter, setUserFilter] = useState('all'); // 'all' or 'my'
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const navigate = useNavigate();
 
   const categories = [
@@ -225,6 +228,22 @@ const ForumList = ({ darkMode }) => {
               />
               <MagnifyingGlassIcon className="h-6 w-6 text-gray-400 absolute left-4 top-3.5 group-hover:text-green-500 transition-colors duration-300" />
             </div>
+            <div className="flex items-center gap-2 ml-2">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded-full border transition-colors duration-200 ${viewMode === 'grid' ? 'bg-green-500 text-white border-green-500' : 'bg-transparent text-gray-400 border-gray-300 hover:bg-gray-100'} ${darkMode ? 'hover:bg-gray-700' : ''}`}
+                title="Grid View"
+              >
+                <Squares2X2Icon className="h-5 w-5" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded-full border transition-colors duration-200 ${viewMode === 'list' ? 'bg-green-500 text-white border-green-500' : 'bg-transparent text-gray-400 border-gray-300 hover:bg-gray-100'} ${darkMode ? 'hover:bg-gray-700' : ''}`}
+                title="List View"
+              >
+                <Bars3Icon className="h-5 w-5" />
+              </button>
+            </div>
             {currentUser && (
               <Link
                 to="/forum/create"
@@ -303,11 +322,11 @@ const ForumList = ({ darkMode }) => {
       </div>
 
       {/* Posts List */}
-      <div className="space-y-6">
+      <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'flex flex-col gap-6'}>
         {posts.map((post) => (
           <div
             key={post.id}
-            className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden`}
+            className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden ${viewMode === 'list' ? 'w-full' : ''}`}
           >
             <div className="p-8">
               <div className="flex items-start justify-between gap-6">
