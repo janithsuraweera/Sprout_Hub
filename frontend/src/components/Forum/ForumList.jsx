@@ -365,7 +365,7 @@ const ForumList = ({ darkMode }) => {
                   <div className="flex items-center gap-4 text-sm text-gray-500">
                     <span className="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded-full">
                       <ChatBubbleLeftIcon className="h-5 w-5" />
-                      {post.commentCount || 0}
+                      {post.commentCount}
                     </span>
                     <button
                       onClick={() => handleLike(post.id, post.likedUsers?.includes(currentUser?.id))}
