@@ -163,21 +163,56 @@ public class ForumController {
 
     @PutMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<Comment> updateComment(@PathVariable String postId, @PathVariable String commentId, @RequestBody Comment comment, @RequestHeader(value = "Authorization", required = false) String authHeader) {
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            String username = jwtUtil.extractUsername(token);
-            User user = userRepository.findByUsername(username).orElse(null);
-            if (user != null) {
-                comment.setAuthor(user.getUsername());
-                comment.setAuthorId(user.getId());
-            }
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).build();
         }
+        String token = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+        ForumPost post = forumService.getForumPostById(postId);
+        Comment existingComment = post.getComments().stream()
+            .filter(c -> c.getId().equals(commentId))
+            .findFirst()
+            .orElse(null);
+        if (existingComment == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (!user.getId().equals(existingComment.getAuthorId())) {
+            return ResponseEntity.status(403).build();
+        }
+        comment.setAuthor(user.getUsername());
+        comment.setAuthorId(user.getId());
         Comment updated = forumService.updateComment(postId, commentId, comment);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable String postId, @PathVariable String commentId) {
+    public ResponseEntity<Void> deleteComment(@PathVariable String postId, @PathVariable String commentId, @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).build();
+        }
+        String token = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+        ForumPost post = forumService.getForumPostById(postId);
+        Comment existingComment = post.getComments().stream()
+            .filter(c -> c.getId().equals(commentId))
+            .findFirst()
+            .orElse(null);
+        if (existingComment == null) {
+            return ResponseEntity.notFound().build();
+        }
+        boolean isAuthor = user.getId().equals(existingComment.getAuthorId());
+        boolean isPostOwner = user.getId().equals(post.getUserId());
+        if (!isAuthor && !isPostOwner) {
+            return ResponseEntity.status(403).build();
+        }
         forumService.deleteComment(postId, commentId);
         return ResponseEntity.ok().build();
     }
