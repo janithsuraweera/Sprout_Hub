@@ -91,15 +91,20 @@ function Navbar({ darkMode, toggleDarkMode }) {
             {/* Dark Mode Toggle Button */}
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 group relative mr-4"
+              className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 group"
               title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
-              {darkMode ? (
-                <SunIcon className="h-6 w-6 text-yellow-500 transform transition-transform duration-300 group-hover:rotate-45" />
-              ) : (
-                <MoonIcon className="h-6 w-6 text-gray-600 dark:text-gray-400 transform transition-transform duration-300 group-hover:rotate-45" />
-              )}
-              <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+              <div className="relative w-8 h-8 flex items-center justify-center">
+                <div className={`absolute inset-0 rounded-full transition-transform duration-500 ${darkMode ? 'scale-100' : 'scale-0'}`}>
+                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <SunIcon className="h-6 w-6 text-yellow-500 transform transition-transform duration-500 group-hover:rotate-45" />
+                </div>
+                <div className={`absolute inset-0 rounded-full transition-transform duration-500 ${darkMode ? 'scale-0' : 'scale-100'}`}>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <MoonIcon className="h-6 w-6 text-gray-600 dark:text-gray-400 transform transition-transform duration-500 group-hover:rotate-45" />
+                </div>
+              </div>
+              <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 dark:bg-gray-700 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg">
                 {darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
               </span>
             </button>

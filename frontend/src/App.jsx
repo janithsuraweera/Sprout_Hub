@@ -164,7 +164,7 @@ function App() {
               path="/forum/create"
               element={
                 <PrivateRoute>
-                  <CreateForumPost />
+                  <CreateForumPost darkMode={darkMode} />
                 </PrivateRoute>
               }
             />
