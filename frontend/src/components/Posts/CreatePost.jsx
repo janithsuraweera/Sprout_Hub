@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaImage, FaTimes } from 'react-icons/fa';
 import postService from '../../services/postService';
 
 function CreatePost() {
   const [formData, setFormData] = useState({
     title: '',
-    content: ''
+    content: '',
+    image: null
   });
+  const [previewUrl, setPreviewUrl] = useState('');
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -33,12 +37,40 @@ function CreatePost() {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
         [name]: ''
       }));
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        setErrors(prev => ({
+          ...prev,
+          image: 'Image size should be less than 5MB'
+        }));
+        return;
+      }
+      setFormData(prev => ({
+        ...prev,
+        image: file
+      }));
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const removeImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      image: null
+    }));
+    setPreviewUrl('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -48,7 +80,14 @@ function CreatePost() {
 
     setIsSubmitting(true);
     try {
-      await postService.createPost(formData);
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('content', formData.content);
+      if (formData.image) {
+        formDataToSend.append('image', formData.image);
+      }
+
+      await postService.createPost(formDataToSend);
       navigate('/posts');
     } catch (err) {
       setErrors({
@@ -85,7 +124,7 @@ function CreatePost() {
                 className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors ${
                   errors.title ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="Enter post title"
+                placeholder="What's on your mind?"
               />
               {errors.title && (
                 <p className="mt-1 text-sm text-red-600">{errors.title}</p>
@@ -105,10 +144,62 @@ function CreatePost() {
                 className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors resize-none ${
                   errors.content ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="Write your post content here..."
+                placeholder="Share your thoughts..."
               />
               {errors.content && (
                 <p className="mt-1 text-sm text-red-600">{errors.content}</p>
+              )}
+            </div>
+
+            {/* Image Upload Section */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Add Image
+                </label>
+                {previewUrl && (
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <FaTimes />
+                  </button>
+                )}
+              </div>
+              
+              {previewUrl ? (
+                <div className="relative">
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                </div>
+              ) : (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-green-500 transition-colors"
+                >
+                  <FaImage className="mx-auto h-12 w-12 text-gray-400" />
+                  <p className="mt-2 text-sm text-gray-600">
+                    Click to upload an image
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    PNG, JPG, GIF up to 5MB
+                  </p>
+                </div>
+              )}
+              
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className="hidden"
+              />
+              {errors.image && (
+                <p className="mt-1 text-sm text-red-600">{errors.image}</p>
               )}
             </div>
 
